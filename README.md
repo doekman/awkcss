@@ -12,18 +12,18 @@ After downloading this repository, add the following to your `~/.profile` file (
 
 ## Usage
 
-Print code from this repository using the _Zebra-stripes_ example:
+The simplest use is to specify the _awkcss_ inline:
 
-	awkcss examples/zebra.awkcss < awkcss.bash
+	awkcss 'NR % 2 == 1 { color(red); } NR % 2 == 0 { color(green); }' < examples/markdown.awkcss
 
-Show the README styled with _markdown_::
+Print the start of the README from this repository using the _MarkDown_ example:
 
-	awkcss examples/markdown.awkcss < README.md
+	head -n 35 README.md | awkcss -f examples/markdown.awkcss
 
-You can always specify to use the awkcss-path with the `-s` parameter, so you can use the examples from every location:
+The `-f` argument (file) takes relative or absolute paths. Use the `-s` argument (system) to resolves the path relative to the location of this repository. Use this to refer to the examples from anywhere:
 
-	cd
-	awkcss -s examples/zebra.awkcss < .bashrc
+	cd #go to home folder
+	awkcss -s examples/zebra.awkcss < .profile  #or .bashrc
 
 
 ## Known issues
