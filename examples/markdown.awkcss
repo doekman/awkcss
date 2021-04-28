@@ -1,0 +1,17 @@
+{
+	width(120);
+}
+/^#+ / { 
+	color(yellow);
+}
+/^# / { 
+	background_color(blue);
+	font_weight(bold);
+}
+/^## / { 
+	text_decoration(underline);
+}
+/^ {4,}/ {
+	#text_decoration(blink);
+	color(gray);
+}

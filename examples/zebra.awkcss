@@ -1,0 +1,8 @@
+NR % 2 == 1 { 
+	color(black);
+	background_color(white);
+}
+NR % 2 == 0 { 
+	color(white);
+	background_color(black);
+}
