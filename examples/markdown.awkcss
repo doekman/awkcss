@@ -2,16 +2,17 @@
 	width(120);
 }
 /^#+ / { 
-	color(yellow);
+	color("yellow");
+	font_weight("bold");
+	width();
 }
 /^# / { 
-	background_color(blue);
-	font_weight(bold);
+	background_color("blue");
 }
 /^## / { 
-	text_decoration(underline);
+	text_decoration("underline");
 }
 /^ {4,}/ {
-	#text_decoration(blink);
-	color(gray);
+	text_decoration(blink);
+	color("gray");
 }

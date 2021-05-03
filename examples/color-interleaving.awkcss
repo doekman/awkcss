@@ -1,0 +1,12 @@
+NR % 4 == 1 {
+	color("green");
+}
+NR % 4 == 2 { 
+	color(bright_green); 
+}
+NR % 4 == 3 {
+	color(bright_red);
+}
+NR % 4 == 0 { 
+	color("red"); 
+}

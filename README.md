@@ -9,6 +9,8 @@ After downloading this repository, add the following to your `~/.profile` file (
 
 	. awkcss.bash
 
+When using Textmate (or compatible editor), you could install [AWK syntaxhighlighting][awk-tmLanguage].
+
 
 ## Usage
 
@@ -31,6 +33,9 @@ The `-f` argument (file) takes relative or absolute paths. Use the `-s` argument
 * You can't match a TAB character in an action, since the `awkcss`-input is first processed via `expand`
 
 
+  [awk-tmLanguage]: https://github.com/zhf/lang-tm
+
+
 ----
 
 ## Plans
@@ -40,9 +45,10 @@ Proposition:
 * Pattern is the selector(-list)
 * Action is the CSS property(-list)
 	- Function sets a propery
-	- A variable is used as property value
+	- A variable (or string) is used as property value
 * No specificity.
 * Inheritance (document/box-model)?
+	- Doesn't work now; see `width`. Work via state?
 * No Cascade....
 * Important? `next()` doesn't do it..?
 
@@ -66,9 +72,9 @@ Proposition:
 	- text_decoration: none/underline/blink
 	- font_weight: bold
 * Todo:
-	- color: rgb-colors?
-	- background_color: rgb-colors?
-	+ box-model:
+	- text_decoration: multiple values? `text_decoration(underline, blink)`
+	- color/background_color: rgb-colors?
+		+ box-model:
 		- padding
 		- border
 		- margin
