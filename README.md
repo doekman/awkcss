@@ -9,7 +9,7 @@ After downloading this repository, add the following to your `~/.profile` file (
 
 	. awkcss.bash
 
-When using Textmate (or compatible editor), you could install [AWK syntaxhighlighting][awk-tmLanguage].
+_Optional_: when using Textmate (or compatible editor), you could install [AWK syntax highlighting][awk-tmLanguage]. Installing [ok-bash][] will enhance your experience while working with this repository (while making you smarter in the process).
 
 
 ## Usage
@@ -34,7 +34,7 @@ The `-f` argument (file) takes relative or absolute paths. Use the `-s` argument
 
 
   [awk-tmLanguage]: https://github.com/zhf/lang-tm
-
+  [ok-bash]: https://github.com/secretGeek/ok-bash
 
 ----
 
