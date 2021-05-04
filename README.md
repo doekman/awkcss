@@ -53,6 +53,46 @@ Proposition:
 * Important? `next()` doesn't do it..?
 
 
+How to wrap text:
+
+* overflow: (we have no scroll bars, so basically it's either clip or visible)
+	+ visible: might be supported (rendered outside padding box)
+	+ hidden: supported (same as clip )
+	+ clip: supported
+	+ scroll: not supported
+	+ auto: not supported
+* hyphens: (no hyphens support)
+	+ none
+	+ manual
+	+ auto
+* word-break:
+	+ normal
+	+ break-all
+	+ keep-all
+	+ .inherit
+	+ .initial
+	+ .unset
+* word-wrap: (alias for overflow-wrap)
+* overflow-wrap:
+	+ normal
+	+ anywhere
+	+ break-word
+* white-space: (tabs are never preserved)
+	+ normal: not supported (lines collapsing makes no sense in awk)
+	+ nowrap: not supported (lines collapsing makes no sense in awk)
+	+ !pre: no-wrap (clipped)
+	+ !pre-wrap: possible to wrap to next line
+	+ pre-line: not supported (collapse spaces make no sense in awk)
+	+ break-spaces: not supported 
+
+Plan:
+
+* `white-space` gebruiken om te kijken of een regel kan wrappen (`pre-wrap`) of afgekapt kan worden (`pre`).
+* Geen support voor word-breaks (`hyphens`, `word-break`, `word-wrap` en `overflow-wrap`)
+* Mochten we padding/border/margin gaan doen, dan kan `overflow` hiervoor gebruikt worden.
+* Initial value: `pre-wrap`
+* 
+
 ### selectors
 
 * Universal selector
@@ -94,3 +134,4 @@ Proposition:
 
 * specify `--verbose` to enable printing warnings to stderr
 * specify programs as  strings on command line (something with temporary files)
+

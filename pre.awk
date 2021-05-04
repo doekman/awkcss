@@ -27,8 +27,13 @@ BEGIN {
 	_font_weight[ normal="normal"] = 21;
 	_font_weight[   bold="bold"  ] =  1;
 
+	# white_space
+	_white_space[pre_wrap="pre_wrap"] = ! 0; #  TRUE == word_wrap
+	_white_space[     pre="pre"     ] = 0;   # FALSE == word_wrap
+
 	# state
-	_content_width = COLS
+	_content_width = COLS;
+	_word_wrap = ! 0;
 }
 function warning(property, value) {
 	printf "‼️ %s value '%s' is unknown and will be ignored\n", property, value > "/dev/stderr";
@@ -38,6 +43,12 @@ function width(value) {
 		_content_width = COLS
 	else
 		_content_width = value
+}
+function white_space(value) {
+	if (value in _white_space)
+		_word_wrap = _white_space[value];
+	else
+		warning("color", value);
 }
 function color(value) {
 	if (value in _colors)

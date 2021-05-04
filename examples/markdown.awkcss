@@ -13,6 +13,6 @@
 	text_decoration("underline");
 }
 /^ {4,}/ {
-	text_decoration(blink);
+	#text_decoration(blink);
 	color("gray");
 }
