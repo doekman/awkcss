@@ -1,4 +1,7 @@
 BEGIN {
+	# symbols
+	here = "here";
+
 	# color & background_color
 	_COLORS[  black="black"  ] = 0; # black
 	_COLORS[    red="red"    ] = 1;
@@ -50,14 +53,16 @@ function _set_ansi_code(value) {
 		_ansi_codes = value;
 }
 function width(value) {
+	#printf "WIDTH[%s:%s]", NR, value
 	if (value == "") 
 		_content_width = COLS
 	else
 		_content_width = value
 }
 function white_space(value) {
+	#printf "WS[%s:%s]", NR, value
 	if (value in _WHITE_SPACE)
-		_do_word_wrap = _WHITE_SPACE[value];
+		_do_word_wrap[NR] = _WHITE_SPACE[value];
 	else
 		warning("color", value);
 }
