@@ -38,13 +38,22 @@ BEGIN {
 	_TEXT_OVERFLOW[    clip="clip"    ] = "";
 	_TEXT_OVERFLOW[ellipsis="ellipsis"] = "1,…"; #because of UTF-8, "<char-lenght>,<characters>"
 
-	# state
+	# defaults
 	width();
 	white_space("pre_wrap");
 	text_overflow("clip");
 }
 function warning(property, value) {
 	printf "‼️ %s value '%s' is unknown and will be ignored\n", property, value > "/dev/stderr";
+}
+function _calculate_line_property(line_property) {
+	# The basis of the cascade
+	line_property[here] = NR in line_property ? line_property[NR] : line_property[0];
+}
+function _calculate_line_properties() {
+	_calculate_line_property(_content_width);
+	_calculate_line_property(_do_word_wrap);
+	_calculate_line_property(_text_overflow);
 }
 function _set_ansi_code(value) {
 	if (length(_ansi_codes) > 0)
@@ -55,9 +64,9 @@ function _set_ansi_code(value) {
 function width(value) {
 	#printf "WIDTH[%s:%s]", NR, value
 	if (value == "") 
-		_content_width = COLS
+		_content_width[NR] = COLS
 	else
-		_content_width = value
+		_content_width[NR] = value
 }
 function white_space(value) {
 	#printf "WS[%s:%s]", NR, value
@@ -95,7 +104,7 @@ function font_weight(value) {
 }
 function text_overflow(value) {
 	if (value in _TEXT_OVERFLOW)
-		_text_overflow = _TEXT_OVERFLOW[value];
+		_text_overflow[NR] = _TEXT_OVERFLOW[value];
 	else
-		_text_overflow = "" value;
+		_text_overflow[NR] = value; # Use supplied string as text-overflow (experimental)
 }
