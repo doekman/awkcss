@@ -1,18 +1,20 @@
 {
-	width(120);
+	width(90); # Maximum line length 120 positions
 }
-/^#+ / { 
+/^#+ / {			#headings
 	color("yellow");
 	font_weight("bold");
-	width();
+	width(); # No max line length
 }
-/^# / { 
+/^# / {				#h1 heading
 	background_color("blue");
 }
-/^## / { 
+/^## / {			#h2 heading
 	text_decoration("underline");
 }
-/^ {4,}/ {
+/^ {4,}/ {			#code block
 	#text_decoration(blink);
 	color("gray");
+	white_space("pre");
+	text_overflow("ellipsis");
 }

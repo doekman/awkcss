@@ -61,6 +61,9 @@ How to wrap text:
 	+ clip: supported
 	+ scroll: not supported
 	+ auto: not supported
+* text-overflow:
+	+ clip
+	+ ellipsis
 * hyphens: (no hyphens support)
 	+ none
 	+ manual
@@ -91,7 +94,7 @@ Plan:
 * Geen support voor word-breaks (`hyphens`, `word-break`, `word-wrap` en `overflow-wrap`)
 * Mochten we padding/border/margin gaan doen, dan kan `overflow` hiervoor gebruikt worden.
 * Initial value: `pre-wrap`
-* 
+* Eventueel `text-overflow` ondersteunen.
 
 ### selectors
 

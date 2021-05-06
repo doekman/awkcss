@@ -31,40 +31,52 @@ BEGIN {
 	_white_space[pre_wrap="pre_wrap"] = ! 0; #  TRUE == word_wrap
 	_white_space[     pre="pre"     ] = 0;   # FALSE == word_wrap
 
+	# text_overflow
+	_TEXT_OVERFLOW[    clip="clip"    ] = "";
+	_TEXT_OVERFLOW[ellipsis="ellipsis"] = "1,…"; #because of UTF-8, "<char-lenght>,<characters>"
+
 	# state
-	_content_width = COLS;
-	_word_wrap = ! 0;
+	_ansi_codes = ""; 
+	width();
+	white_space("pre_wrap");
+	text_overflow("clip");
 }
 function warning(property, value) {
 	printf "‼️ %s value '%s' is unknown and will be ignored\n", property, value > "/dev/stderr";
 }
+function _set_ansi_code(value) {
+	if (length(_ansi_codes) > 0)
+		_ansi_codes = _ansi_codes ";" value;
+	else
+		_ansi_codes = value;
+}
 function width(value) {
-	if (value == "")
+	if (value == "") 
 		_content_width = COLS
 	else
 		_content_width = value
 }
 function white_space(value) {
 	if (value in _white_space)
-		_word_wrap = _white_space[value];
+		_do_word_wrap = _white_space[value];
 	else
 		warning("color", value);
 }
 function color(value) {
 	if (value in _colors)
-		printf "\033[" (30+_colors[value]) "m";
+		_set_ansi_code(30+_colors[value])
 	else
 		warning("color", value);
 }
 function background_color(value) {
 	if (value in _colors)
-		printf "\033[" (40+_colors[value]) "m";
+		_set_ansi_code(40+_colors[value])
 	else
 		warning("color", value);
 }
 function text_decoration_line(value) {
 	if (value in _text_decoration_line)
-		printf "\033[" _text_decoration_line[value] "m";
+		_set_ansi_code(_text_decoration_line[value])
 	else
 		warning("text_decoration_line", value);
 }
@@ -73,7 +85,13 @@ function text_decoration(value) {
 }
 function font_weight(value) {
 	if (value in _font_weight)
-		printf "\033[" _font_weight[value] "m";
+		_set_ansi_code(_font_weight[value])
 	else
 		warning("font_weight", value);
+}
+function text_overflow(value) {
+	if (value in _TEXT_OVERFLOW)
+		_text_overflow = _TEXT_OVERFLOW[value];
+	else
+		_text_overflow = "" value;
 }
