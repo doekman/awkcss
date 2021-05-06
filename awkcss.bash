@@ -17,7 +17,7 @@ else
 			unset -f _awk_css__usage #emulate a "local" function
 			echo "Usage: awkcss [-f PROGRAM_FILE | -s LIBRARY_FILE | PROGRAM_STRING | --help | --version]"
 		}
-		args=(-v "COLS=$(tput cols)" -v "LINES=$(tput lines)" -v "COLORS=$(tput colors)" "-f" "$AWKCSS_PATH/pre.awk")
+		args=(-v "COLS=$(tput cols)" -v "LINES=$(tput lines)" -v "COLORS=$(tput colors)" "-f" "$AWKCSS_PATH/pre.awk" "-f" "$AWKCSS_PATH/defaults.awkcss")
 		if (( $# == 0)); then _awk_css__usage; return 0; fi
 		while (( $# > 0 )); do
 			case "$1" in

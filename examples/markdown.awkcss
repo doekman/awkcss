@@ -1,4 +1,4 @@
-{
+BEGIN {
 	width(90); # Maximum line length 120 positions
 }
 /^#+ / {			#headings

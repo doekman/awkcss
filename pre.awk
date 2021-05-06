@@ -37,11 +37,6 @@ BEGIN {
 	# text_overflow
 	_TEXT_OVERFLOW[    clip="clip"    ] = "";
 	_TEXT_OVERFLOW[ellipsis="ellipsis"] = "1,…"; #because of UTF-8, "<char-lenght>,<characters>"
-
-	# defaults
-	width();
-	white_space("pre_wrap");
-	text_overflow("clip");
 }
 function warning(property, value) {
 	printf "‼️ %s value '%s' is unknown and will be ignored\n", property, value > "/dev/stderr";
@@ -54,12 +49,18 @@ function _calculate_line_properties() {
 	_calculate_line_property(_content_width);
 	_calculate_line_property(_do_word_wrap);
 	_calculate_line_property(_text_overflow);
+	# TODO: system defined ansi-codes now can be overwritten by user defined codes.
+	# Undesireable because multiple CSS properties are stored in the same structure.
+	_ansi_codes[here] = 0 in _ansi_codes ? _ansi_codes[0] : "";
+	if (NR in _ansi_codes) {
+		_ansi_codes[here] = _ansi_codes[here] (length(_ansi_codes[here]) > 0 ? ";" : "") _ansi_codes[NR]
+	}
 }
 function _set_ansi_code(value) {
-	if (length(_ansi_codes) > 0)
-		_ansi_codes = _ansi_codes ";" value;
+	if (length(_ansi_codes[NR]) > 0)
+		_ansi_codes[NR] = _ansi_codes[NR] ";" value;
 	else
-		_ansi_codes = value;
+		_ansi_codes[NR] = value;
 }
 function width(value) {
 	#printf "WIDTH[%s:%s]", NR, value

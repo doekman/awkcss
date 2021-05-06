@@ -1,0 +1,6 @@
+# user agent AWKCSS rules
+BEGIN {
+	width();                  # Necessary
+	white_space("pre_wrap");  # Code default would be "pre"
+	text_overflow("clip");    # Code default would be "clip"
+}
