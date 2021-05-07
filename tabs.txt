@@ -1,0 +1,33 @@
+Testing tab-stops
+=================
+
+No tabs.
+	One tabstop
+		Two tabstops
+			Three tabstops
+				Four tabstops
+					Five tabstops
+						Six tabstops
+							Seven tabstops
+								Eight tabstops
+									Nine tabstops
+								8 tabstops
+							7 tabstops
+						6 tabstops
+					5 tabstops
+				4 tabstops
+			3 tabstops
+		2 tabstops
+	1 tabstops
+0 tabstops
+
+0:	Tab
+01:	Tab
+012:	Tab
+0123:	Tab
+01234:	Tab
+012345:	Tab
+0123456:	Tab
+01234567:	Tab
+012345678:	Tab
+0123456789:	Tab

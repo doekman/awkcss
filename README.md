@@ -30,11 +30,24 @@ The `-f` argument (file) takes relative or absolute paths. Use the `-s` argument
 
 ## Known issues
 
-* You can't match a TAB character in an action, since the `awkcss`-input is first processed via `expand`
+* TAB's are always expanded to 8 characters
 
 
   [awk-tmLanguage]: https://github.com/zhf/lang-tm
   [ok-bash]: https://github.com/secretGeek/ok-bash
+
+### Work with columns
+
+* Howto: next()
+* Howto: 
+
+Done:
+
+* Support passing files as arguments: hoe gaat dit dan werken met `expand`?
+* tabs: zelf als 8 spaties intepreteren. Zie comando's:
+	- expand (negeert instellingen van `tabs`)
+	- tabs
+	
 
 ----
 
@@ -46,7 +59,7 @@ Proposition:
 * Action is the CSS property(-list)
 	- Function sets a propery
 	- A variable (or string) is used as property value
-* No specificity.
+* No specificity 
 * Inheritance (document/box-model)?
 	- Doesn't work now; see `width`. Work via state?
 * No Cascade....
@@ -83,8 +96,9 @@ Proposition:
 		- font_stretch: spaces in between
 		- text_transform: capitalize/uppercase/lowercase/none
 		- text_align: left/center/right
+	+ wrap text
 		- word_wrap
-		- word_break
+		- word_break 
 		- text_overflow: .../clip
 * Other:
 	+ supply column number to property-function as column selector?
@@ -92,7 +106,7 @@ Proposition:
 
 ### others
 
-* specify `--verbose` to enable printing warnings to stderr
+* specify `--verbose` to enable printing warnings to stderr. --lint
 * specify programs as  strings on command line (something with temporary files)
 
 

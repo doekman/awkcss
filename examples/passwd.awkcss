@@ -1,0 +1,8 @@
+/^#/ { 
+	color(gray);
+	#next; # would not print anything
+}
+/^[^#]/ { 
+	color(yellow);
+	#color(bright_white, 1); # use white for first column
+}

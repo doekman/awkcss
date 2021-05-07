@@ -1,8 +1,14 @@
+group("BEGIN", FILENAME) {
+	color(yellow);
+	font_weight(bold);
+	white_space("pre");
+	content( sprintf("___[ %s ]%s", FILENAME, str_mul("_", 400)) );
+}
 NR % 2 == 0 { 
 	color(white);
 	background_color(black);
 }
 NR % 2 == 1 { 
 	color(black);
-	background_color(white);
+	background_color(gray);
 }

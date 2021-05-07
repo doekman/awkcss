@@ -12,7 +12,7 @@ BEGIN {
 /^## / {			#h2 heading
 	text_decoration("underline");
 }
-/^ {4,}/ {			#code block
+/^\t| {4,}/ {		#code block
 	#text_decoration(blink);
 	color("gray");
 	white_space("pre");

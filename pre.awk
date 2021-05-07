@@ -38,6 +38,18 @@ BEGIN {
 	_TEXT_OVERFLOW[    clip="clip"    ] = "";
 	_TEXT_OVERFLOW[ellipsis="ellipsis"] = "1,…"; #because of UTF-8, "<char-lenght>,<characters>"
 }
+function group(scope, value) {
+	if (scope in _group)
+		if (_group[scope] == value)
+			return 0;
+	_group[scope] = value;
+	return ! 0;
+}
+function str_mul(str, nr) {
+	res = sprintf("%" nr "s", " ");
+	gsub(" ", str, res);
+	return res;
+}
 function warning(property, value) {
 	printf "‼️ %s value '%s' is unknown and will be ignored\n", property, value > "/dev/stderr";
 }
