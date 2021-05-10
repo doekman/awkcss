@@ -38,6 +38,9 @@ BEGIN {
 	_TEXT_OVERFLOW[    clip="clip"    ] = "";
 	_TEXT_OVERFLOW[ellipsis="ellipsis"] = "1,…"; #because of UTF-8, "<char-lenght>,<characters>"
 }
+# https://developer.mozilla.org/en-US/docs/Web/API/Console#using_groups_in_the_console
+# TODO: hernoemen naar `section` (een nieuwe groep begint bij een nieuwe naam?)
+# TOO: optioneel een groupEnd (die wordt inpliciet aangeroepen bij een nieuwe "value" binnen "scope")
 function group(scope, value) {
 	if (scope in _group)
 		if (_group[scope] == value)
