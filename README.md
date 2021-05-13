@@ -5,7 +5,7 @@ Applying style to your terminal session with `awk`, CSS style!
 
 ## Installation
 
-After downloading this repository, add the following to your `~/.profile` file (or your other favourite startup file):
+After downloading this repository, add the following to your `~/.profile` file¹ (the script needs to be _sourced_ because it is implemented as a shell function):
 
 	. awkcss.bash
 
@@ -24,32 +24,116 @@ Print the start of the README from this repository using the _MarkDown_ example:
 
 The `-f` argument (file) takes relative or absolute paths. Use the `-s` argument (system) to resolves the path relative to the location of this repository. Use this to refer to the examples from anywhere:
 
-	cd #go to home folder
-	awkcss -s examples/zebra.awkcss < .profile  #or .bashrc
+	cd                                        # go to home folder
+	awkcss -s examples/zebra.awkcss .profile  # ¹
 
+
+## Language Guide
+
+`awkcss` is a [DSL][DSL] implemented in the awk language to stylize text in your terminal. So basically everything you can do in `awk`, you can do with `awkcss`. 
+
+`awkcss` templates can be used as string-parameters on the command line. However, it's more convenient to store long lived templates in files with the `.awkcss` extention. Using the `.ass` filename extention is discourages. 
+
+An `awk` file is build from pattern-action statements. With `awkcss` we talk about selector-property statements, which make out `awkcss` rules. Multiple rules can apply to one line, like _CSS_. However, in `awk` a rule only applies to a line (except the `BEGIN`/`END` templates of course), so this is true for `awkcss`.
+
+The `awkcss` __properties__ work via function calls. This brings some advantages, one of which is when you use an unknown property, `awk` will stop with an error message.
+
+So stylize text, you can use the following properties:
+
+* `color( named_color )`: specify a foreground color, see below.
+* `background_color( named_color )`: specify a background color, see below.
+* `text_decoration( ... [, ... ])`: shorthand property
+	- `text_decoration_line( underline | blink [, ... ] )`: make the text _underline_ and/or _blink_.
+* `font_weight( normal | bold )`: make the text appear _bold_ or _normal_.
+
+`named_color` is defined one of:
+
+* `black` and `bright_black` (or `gray`)
+* `red` and `bright_red`
+* `green` and `bright_green`
+* `yellow` and `bright_yellow`
+* `blue` and `bright_blue`
+* `magenta` and `bright_magenta`
+* `cyan` and `bright_cyan`
+* `white` and `bright_white`
+
+Always be aware of the capabilities of your system. You can inspect the supported number of colors by the `COLORS` variable (see also below). Black and white always work, but for the normal colors, you need at least 8 colors. To use the bright-variations, 16 colors is the minimum.
+
+* `width( [nr_columns] )`: set the maximum width of a line. Handy when using background colors. When omitting `nr_columns`, the default value is used, which is the width of the terminal (see variable `COLS` below).
+* `white_space( [pre | pre_wrap] )`:
+	- __pre\_wrap__ (default): all whitespace is preserved, and when a line doesn't fit the _width_, it is wrapped to the next line.
+	- __pre__: same, but text which doesn't fit will the content box will not be displayed.
+* `text_overflow( clip | ellipsis | "string" )`:
+	- __clip__ (default): truncate the text.
+	- __ellipsis__: display an ellipsis (`…`) to indicate where text was clipped.
+	- __"string"__ (expirimental): to specify a different character or characters, use a awk string. For example `text_overflow("8<")`.
+	- Note: because of `UTF-8`, when using a comma (`,`) or non-ASCII characters, prefix the clipping indicator with character length and a comma. For example: `text_overflow("1,❗️")`.
+
+Enumerated __property values__ are variables, like the color `gray`. However, when you use an unsupported value, the value is ignored and a warning is written to the standard error. For example, the property assignment `color(grey)` will result in the following warning:
+
+	‼️ color value '' is unknown and will be ignored
+
+To know what value caused the error, you can also specify the property-value as a string `color("grey")`. This will give a more meaningful warning text:
+
+	‼️ color value 'grey' is unknown and will be ignored
+
+This can be used with all enumerated values.
+
+Besides `awk`'s __variables with special meanings__, like `NR` and `FILENAME`, you can also use the following variables:
+
+* `COLS`: the number of columns in the current terminal (`tput cols`).
+* `LINES`: the number of lines in the current terminal (`tput lines`).
+* `COLORS`: the number of colors in the current terminal (`tput colors`).
+
+This enables you to make "media-queries" with `awk`-expressions. This example demonstrates how one can query for capabilities and apply style that fits these capabilities:
+
+	COLORS<=2  { color(white);      }
+	COLORS==8  { color(red);        }
+	COLORS>=16 { color(bright_red); }
+
+One could also have omitted the `COLORS<=2` expression, and rewrite the second expression to `COLORS>=8`. The outcome would be the same, although not as efficient. `awk` is not a functional language, and more code would be executed.
+
+User templates can assign variables too, but all property-names and enumerated values are reserved and cannot be used. Also all variable names starting with an underscore (`_`) can't be used.
+
+For you user style-sheet, the `BEGIN` template is an efficient place to place default values. This rule will only be hit once, but properties applied 
+
+For `awkcss` to function optimal, the `print` and `printf` statements should not be called by user templates. `awkcss` supplies a render pipeline, which will take care of showing the output. Also, the statments `next` and `nextfile` should be avoided, as they mess up `awkcss`' proces model.
+
+Finally, check out the `examples/` folder with some idea's how to use `awkcss`.
 
 ## Known issues
 
 * TAB's are always expanded to 8 characters
+* `awkcss` is designed to work with all versions of `awk`, so `gawk` specific capabilities are not used.
 
+
+## Future plans
+
+I would want to focus on _selectors_. Implementing new _properties_ should only be done to demonstrate those _selectors_.
+
+By supplying an additional parameter to a property assignment, an additional selector could be passed (ideally a selector should be part of the pattern, however I don't see a nice way to do this though...):
+
+* column selector:
+	- positive _number_: select that column: `color(red, 1)` makes column 1 red.
+	- a negative number would select from the right. So with a 6 column layout, -2 would select column number 5.
+	- seperator selector: select the seperator, selected by `FS`: `color(gray, "1:2")` makes the seperator between column 1 and 2 gray.
+	- range selector: select multiple columns: `color(white, "1-3")` makes column 1, 2 and 3 white. Seperator is not selected.
+	- inclusive range selector: using `"1..3"` would also select the seperators.
+* block selector:
+	- a mechanism to detect a group op multiple lines would be nice to have. The property `border` comes to mind.
+	- t.b.d.
+
+
+¹) or your other favourite startup file.
 
   [awk-tmLanguage]: https://github.com/zhf/lang-tm
   [ok-bash]: https://github.com/secretGeek/ok-bash
+  [DSL]: https://en.wikipedia.org/wiki/Domain-specific_language "Domain-specific language"
 
-### Work with columns
-
-* Howto: next()
-* Howto: 
-
-Done:
-
-* Support passing files as arguments: hoe gaat dit dan werken met `expand`?
-* tabs: zelf als 8 spaties intepreteren. Zie comando's:
-	- expand (negeert instellingen van `tabs`)
-	- tabs
-	
 
 ----
+
+<small>(please ignore notes below)</small>
 
 ## Plans
 

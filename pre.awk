@@ -12,7 +12,8 @@ BEGIN {
 	_COLORS[   cyan="cyan"   ] = 6;
 	_COLORS[  white="white"  ] = 7; # white
 
-	_COLORS[           gray="gray"         ] = 60; # bright_black
+	_COLORS[          gray="gray"          ] = 60;
+	_COLORS[  bright_black="bright_black"  ] = 60;
 	_COLORS[    bright_red="bright_red"    ] = 61;
 	_COLORS[  bright_green="bright_green"  ] = 62;
 	_COLORS[ bright_yellow="bright_yellow" ] = 63;
@@ -78,11 +79,10 @@ function _set_ansi_code(value) {
 		_ansi_codes[NR] = value;
 }
 function width(value) {
-	#printf "WIDTH[%s:%s]", NR, value
 	if (value == "") 
-		_content_width[NR] = COLS
+		_content_width[NR] = COLS;
 	else
-		_content_width[NR] = value
+		_content_width[NR] = int(value);
 }
 function white_space(value) {
 	#printf "WS[%s:%s]", NR, value
@@ -103,14 +103,18 @@ function background_color(value) {
 	else
 		warning("color", value);
 }
-function text_decoration_line(value) {
+function text_decoration_line2(value) {
 	if (value in _TEXT_DECORATION_LINE)
 		_set_ansi_code(_TEXT_DECORATION_LINE[value])
 	else
 		warning("text_decoration_line", value);
 }
-function text_decoration(value) {
-	text_decoration_line(value);
+function text_decoration_line(value1, value2) {
+	text_decoration_line2(value1);
+	if (value2) text_decoration_line2(value2);
+}
+function text_decoration(value1, value2) {
+	text_decoration_line(value1, value2);
 }
 function font_weight(value) {
 	if (value in _FONT_WEIGHT)

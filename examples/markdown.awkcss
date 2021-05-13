@@ -1,5 +1,5 @@
 BEGIN {
-	width(90); # Maximum line length 120 positions
+	width(80); # Maximum line length 120 positions
 }
 /^#+ / {			#headings
 	color("yellow");
