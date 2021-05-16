@@ -124,6 +124,7 @@ By supplying an additional parameter to a property assignment, an additional sel
 * block selector:
 	- a mechanism to detect a group op multiple lines would be nice to have. The property `border` comes to mind.
 	- t.b.d.
+* section(name, value) (experimental): returns true when name/value-combination has not been hit for a line; false otherwise
 
 
 ¹) or your other favourite startup file.
@@ -140,7 +141,33 @@ By supplying an additional parameter to a property assignment, an additional sel
 
 ## Plans
 
-Proposition:
+### Box model for lines
+
+Every line is a box. Multiple lines can be grouped to be one box by adding `group( name[, value] )` to every line. Consecutive lines with the same group/value combination will be considered one box.
+
+Boxes can have the following properties:
+
+* border( named_line[, named_color[, named_color]] )
+	- border_style( named_line {1,4} ): default `none`
+		+ border_style_top( named_line )
+		+ border_style_right( named_line )
+		+ border_style_bottom( named_line )
+		+ border_style_left( named_line )
+	- `border_color( named_color {1,4}  )`: default `inherit`
+	- `border_background_color( named_color {1,4} )` -- can't make inside & outside of borders have different colors, so introduce this property.
+	- ~~border_width: not-supported~~
+* padding( a[, b[, c[, d]]] )
+	- padding-bottom: value in rows
+	- padding-left: value in columns
+	- padding-right: value in columns 
+	- padding-top: value in rows
+* margin: idem
+
+* `named_line := none | solid | double | thick`
+	- light, heavy & double Unicode box drawing
+
+
+### Proposition
 
 * Pattern is the selector(-list)
 * Action is the CSS property(-list)
