@@ -7,3 +7,5 @@ awkcss -f examples/color-interleaving.awkcss "$@" examples/markdown.awkcss
 awkcss -F ':' -s examples/passwd.awkcss "$@" /etc/passwd
 # navigating away
 cd; awkcss -s examples/zebra.awkcss < ${1:-.profile}  #or .bashrc; `cd -` to go back
+# Fiddling
+egrep $'^[^#]' /etc/passwd | head -n 10 | awk -F ':' -f fiddle/test.awk
