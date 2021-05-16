@@ -1,4 +1,4 @@
-group("BEGIN", FILENAME) {
+section("BEGIN", FILENAME) {
 	color(yellow);
 	font_weight(bold);
 	white_space("pre");
