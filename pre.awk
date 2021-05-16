@@ -89,7 +89,7 @@ function white_space(value) {
 	if (value in _WHITE_SPACE)
 		_do_word_wrap[NR] = _WHITE_SPACE[value];
 	else
-		warning("color", value);
+		warning("white_space", value);
 }
 function color(value) {
 	if (value in _COLORS)
@@ -101,7 +101,7 @@ function background_color(value) {
 	if (value in _COLORS)
 		_set_ansi_code(40+_COLORS[value])
 	else
-		warning("color", value);
+		warning("background_color", value);
 }
 function text_decoration_line2(value) {
 	if (value in _TEXT_DECORATION_LINE)
