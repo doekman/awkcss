@@ -22,6 +22,10 @@ BEGIN {
 	_COLORS[   bright_cyan="bright_cyan"   ] = 66;
 	_COLORS[  bright_white="bright_white"  ] = 67; # bright_white
 
+	# display
+	_DISPLAY[block="block"] = block;
+	_DISPLAY[ none="none" ] = none;
+
 	# text_decoration_line
 	_TEXT_DECORATION_LINE[     none="none"     ] = 24;
 	_TEXT_DECORATION_LINE[underline="underline"] =  4;
@@ -32,8 +36,8 @@ BEGIN {
 	_FONT_WEIGHT[   bold="bold"  ] =  1;
 
 	# white_space
-	_WHITE_SPACE[pre_wrap="pre_wrap"] = ! 0; #  TRUE == word_wrap
-	_WHITE_SPACE[     pre="pre"     ] = 0;   # FALSE == word_wrap
+	_WHITE_SPACE[pre_wrap="pre_wrap"] = ! 0; #  TRUE == _do_word_wrap
+	_WHITE_SPACE[     pre="pre"     ] = 0;   # FALSE == _do_word_wrap
 
 	# text_overflow
 	_TEXT_OVERFLOW[    clip="clip"    ] = "";
@@ -63,6 +67,7 @@ function _calculate_line_property(line_property) {
 }
 function _calculate_line_properties() {
 	_calculate_line_property(_content_width);
+	_calculate_line_property(_display);
 	_calculate_line_property(_do_word_wrap);
 	_calculate_line_property(_text_overflow);
 	# TODO: system defined ansi-codes now can be overwritten by user defined codes.
@@ -77,6 +82,12 @@ function _set_ansi_code(value) {
 		_ansi_codes[NR] = _ansi_codes[NR] ";" value;
 	else
 		_ansi_codes[NR] = value;
+}
+function display(value) {
+	if (value in _DISPLAY)
+		_display[NR] = _DISPLAY[value];
+	else
+		warning("display", value);
 }
 function width(value) {
 	if (value == "") 

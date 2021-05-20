@@ -6,3 +6,7 @@
 	color(yellow);
 	#color(bright_white, 1); # use white for first column
 }
+/^_/ {
+	# Hide system accounts
+	display(none);
+}

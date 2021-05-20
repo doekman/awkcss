@@ -16,16 +16,18 @@ function _print_line(text, from_index		, line, text_overflow_parts) {
 
 function content(text) {
 	_calculate_line_properties();
-	if (_do_word_wrap[here]) {
-		_index = 0;
-		while (_index <= length(text)) {
-			#printf "[%s]", _index
-			_print_line(text, _index);
-			_index += _content_width[here];
+	if (_display[here] == block) {
+		if (_do_word_wrap[here]) {
+			_index = 0;
+			while (_index <= length(text)) {
+				#printf "[%s]", _index
+				_print_line(text, _index);
+				_index += _content_width[here];
+			}
 		}
-	}
-	else {
-		_print_line(text, 0);
+		else {
+			_print_line(text, 0);
+		}
 	}
 }
 # Main render rule

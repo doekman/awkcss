@@ -61,6 +61,9 @@ Always be aware of the capabilities of your system. You can inspect the supporte
 
 To control the content-box (i.e. lines of text), use the following properties:
 
+* `display( block | none )`:
+	- __block__ (default): a paragraph (one or more lines) is created.
+	- __none__: the line is not rendered (use this instead of `next`).
 * `width( [nr_columns] )`: set the maximum width of a line. Handy when using background colors. When omitting `nr_columns`, the default value is used, which is the width of the terminal (see variable `COLS` below).
 * `white_space( [pre | pre_wrap] )`:
 	- __pre\_wrap__ (default): all whitespace is preserved, and when a line doesn't fit the _width_, it is wrapped to the next line. The content-box can be multiple lines.
@@ -99,7 +102,7 @@ User templates can assign variables too, but all property-names and enumerated v
 
 For your user style-sheet, the `BEGIN` template is an efficient place to place default values. This rule will only be hit once, but properties applied for every line, when not overridden by a normal rule.
 
-For `awkcss` to function optimal, the `print` and `printf` statements should not be called by user templates. `awkcss` supplies a render pipeline, which will take care of showing the output. Also, the statements `next` and `nextfile` should be avoided, as they mess up `awkcss`' proces model.
+For `awkcss` to function optimal, the `print` and `printf` statements should not be called by user templates. `awkcss` supplies a render pipeline, which will take care of showing the output. Also, the statements `next` (use `display(none)` instead) and `nextfile` should be avoided, as they mess up `awkcss`' proces model.
 
 Finally, check out the `examples/` folder with some idea's how to use `awkcss`.
 
