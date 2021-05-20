@@ -109,6 +109,7 @@ Finally, check out the `examples/` folder with some idea's how to use `awkcss`.
 ## Known issues
 
 * <kbd>TAB</kbd> characters are always expanded to 8 characters
+* Since `awk` doesn't calculate the `length` of non-ASCII characters great (and the fact that emoticons takeup 2 characters of space), `awkcss` doesn't either. Lines with non-ASCII may have crippled content boxes.
 * `awkcss` is designed to work with all versions of `awk`, so `gawk` specific capabilities are not used.
 
 
