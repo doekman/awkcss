@@ -16,7 +16,7 @@ _Optional_: when using Textmate (or compatible editor), you could install [AWK s
 
 The simplest use is to specify the _awkcss_ inline:
 
-	awkcss 'NR % 2 == 1 { color(red); } NR % 2 == 0 { color(green); }' < examples/markdown.awkcss
+	awkcss 'BEGIN { color(red); } NR % 2 == 0 { color(green); }' defaults.awkcss
 
 Print the start of the README from this repository using the _MarkDown_ example:
 
@@ -24,8 +24,8 @@ Print the start of the README from this repository using the _MarkDown_ example:
 
 The `-f` argument (file) takes relative or absolute paths. Use the `-s` argument (system) to resolves the path relative to the location of this repository. Use this to refer to the examples from anywhere:
 
-	cd                                        # go to home folder
-	awkcss -s examples/zebra.awkcss .profile  # ¹
+	cd                                          # go to home folder
+	awkcss -s examples/zebra.awkcss < .profile  # ¹
 
 
 ## Language Guide
@@ -64,15 +64,18 @@ To control the content-box (i.e. lines of text), use the following properties:
 * `display( block | none )`:
 	- __block__ (default): a paragraph (one or more lines) is created.
 	- __none__: the line is not rendered (use this instead of `next`).
-* `width( [nr_columns] )`: set the maximum width of a line. Handy when using background colors. When omitting `nr_columns`, the default value is used, which is the width of the terminal (see variable `COLS` below).
-* `tab_size( nr_characters )`: set the width of a tab-character. Must be a positive integer value. Defaults to `8`.
-* `white_space( [pre | pre_wrap] )`:
+* `width( [nr_columns] )`:
+	- __nr\_columns_: set the maximum width of a line. Handy when using background colors.
+	- _no arguments_: when omitting `nr_columns`, the default value is used, which is the width of the terminal (see variable `COLS` below).
+* `tab_size( nr_characters )`:
+	- __nr\_characters__: set the width of a tab-character. Must be a positive integer value. Defaults to `8`.
+* `white_space( pre | pre_wrap )`:
 	- __pre\_wrap__ (default): all whitespace is preserved, and when a line doesn't fit the _width_, it is wrapped to the next line. The content-box can be multiple lines.
 	- __pre__: same, but the text which doesn't fit the content box is not be displayed. The content-box will stay one line.
 * `text_overflow( clip | ellipsis | "string" )`:
 	- __clip__ (default): truncate the text.
 	- __ellipsis__: display an ellipsis (`…`) to indicate the text is partly shown and is clipped.
-	- __"string"__ (expirimental): to specify a different character or characters, use a awk string. For example `text_overflow("8<")`.
+	- __"string"__ (experimental): to specify a different character or characters, use a awk string. For example `text_overflow("8<")`.
 	- Note: because of `UTF-8`, when using a comma (`,`) or non-ASCII characters, prefix the clipping indicator with character length and a comma. For example: `text_overflow("1,❗️")`.
 
 Enumerated __property values__ are variables, like the color `gray`. However, when you use an unsupported value, the value is ignored and a warning is written to the standard error (the _standard error_ is like the [console][console]  of the terminal. A bit confusing, I know…). For example, the property assignment `color(grey)` will result in the following warning:
@@ -112,23 +115,34 @@ Finally, check out the `examples/` folder with some idea's how to use `awkcss`.
 * Since `awk` doesn't calculate the `length` of non-ASCII characters great (and the fact that emoticons takeup 2 characters of space), `awkcss` doesn't either. Lines with non-ASCII may have crippled content boxes.
 * `awkcss` is designed to work with all versions of `awk`, so `gawk` specific capabilities are not used.
 
-
 ## Future plans
 
 I would want to focus on _selectors_. Implementing new _properties_ should only be done to demonstrate those _selectors_.
 
-By supplying an additional parameter to a property assignment, an additional selector could be passed (ideally a selector should be part of the pattern, however I don't see a nice way to do this though...):
+There can be three levels of selectors:
 
-* column selector:
-	- positive _number_: select that column: `color(red, 1)` makes column 1 red.
+* `BEGIN { ... }`: effectively this is line NR==0. Properties apply to all lines, but can be overridden.
+* `... { ... }`: a line selector. Properties apply to the selected lines only.
+* `select(...) { ... }`: can be used to select columns.
+
+
+* `select( [selector] )`:
+	- positive _number_: select that column: `select(1) { color(red); }` makes column 1 red.
 	- a negative number would select from the right. So with a 6 column layout, -2 would select column number 5.
-	- seperator selector: select the seperator, selected by `FS`: `color(gray, "1:2")` makes the seperator between column 1 and 2 gray.
-	- range selector: select multiple columns: `color(white, "1-3")` makes column 1, 2 and 3 white. Seperator is not selected.
+	- seperator selector: select the seperator, selected by `FS`: `select("1:2") { color(gray); }` makes the seperator between column 1 and 2 gray. (?? how to specify border between cells then ??)
+	- range selector: select multiple columns: `select("1-3") { color(white); }` makes column 1, 2 and 3 white. Seperator is not selected.
 	- inclusive range selector: using `"1..3"` would also select the seperators.
-* block selector:
+	- since `awk` is imperative, you might need to reset the selector if you don't want it to apply to subsequent rules: `select("2") { color(white); select(); }`
+	- `select` returns FALSE if the current line isn't selected (if there aren't enough columns)
+	- **implementation**: do we need an implicit `display: columns` and/or `display: table`
+
+* grouping construct:
 	- a mechanism to detect a group op multiple lines would be nice to have. The property `border` comes to mind.
-	- t.b.d.
+	- Something like: `group("comment") { border(solid, gray); group(); }`
+
 * section(name, value) (experimental): returns true when name/value-combination has not been hit for a line; false otherwise
+
+There are no plans to implement input buffering, so related CSS features won't be considered. Just to keep things simple.
 
 
 ¹) or your other favourite startup file.
