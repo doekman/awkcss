@@ -9,3 +9,4 @@ awkcss -F ':' -s examples/passwd.awkcss "$@" /etc/passwd
 cd; awkcss -s examples/zebra.awkcss < ${1:-.profile}  #or .bashrc; `cd -` to go back
 # Fiddling
 egrep $'^[^#]' /etc/passwd | head -n 10 | awk -F ':' -f fiddle/test.awk
+awkcss '{ color(red); } count("\t")%2==1 { color(green); } count("\t")==0 { color(magenta); }' fiddle/tabs.txt
