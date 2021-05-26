@@ -65,7 +65,7 @@ To control the content-box (i.e. lines of text), use the following properties:
 	- __block__ (default): a paragraph (one or more lines) is created.
 	- __none__: the line is not rendered (use this instead of `next`).
 * `width( [nr_columns] )`:
-	- __nr\_columns_: set the maximum width of a line. Handy when using background colors.
+	- __nr\_columns__: set the maximum width of a line. Handy when using background colors.
 	- _no arguments_: when omitting `nr_columns`, the default value is used, which is the width of the terminal (see variable `COLS` below).
 * `tab_size( nr_characters )`:
 	- __nr\_characters__: set the width of a tab-character. Must be a positive integer value. Defaults to `8`.
@@ -96,11 +96,11 @@ Besides `awk`'s __variables with special meanings__, like `NR` and `FILENAME`, y
 
 This enables you to make "media-queries" with `awk`-expressions. This example demonstrates how one can query for capabilities and apply style that fits these capabilities:
 
-	COLORS<=2  { color(white);      }
-	COLORS==8  { color(red);        }
-	COLORS>=16 { color(bright_red); }
+	COLORS <= 2  { color(white);      }
+	COLORS == 8  { color(red);        }
+	COLORS >= 16 { color(bright_red); }
 
-One could also have omitted the `COLORS<=2` expression, and rewrite the second expression to `COLORS>=8`. The outcome would be the same, although not as efficient. `awk` is not a functional language, and more code would be executed.
+One could also have omitted the `COLORS <= 2` expression, and rewrite the second expression to `COLORS>=8`. The outcome would be the same, although not as efficient. `awk` is not a functional language, and more code would be executed.
 
 User templates can assign variables too, but all property-names and enumerated values are reserved and cannot be used. Also all variable names starting with an underscore (`_`) can't be used, because they are used internally.
 
@@ -122,25 +122,26 @@ I would want to focus on _selectors_. Implementing new _properties_ should only 
 There can be three levels of selectors:
 
 * `BEGIN { ... }`: effectively this is line NR==0. Properties apply to all lines, but can be overridden.
-* `... { ... }`: a line selector. Properties apply to the selected lines only.
-* `select(...) { ... }`: can be used to select columns.
 
+* `[pattern] { ... }`: a line selector. Properties apply to the selected lines only.
 
-* `select( [selector] )`:
+* `select( [selector] )`: can be used to select columns.
 	- positive _number_: select that column: `select(1) { color(red); }` makes column 1 red.
 	- a negative number would select from the right. So with a 6 column layout, -2 would select column number 5.
-	- seperator selector: select the seperator, selected by `FS`: `select("1:2") { color(gray); }` makes the seperator between column 1 and 2 gray. (?? how to specify border between cells then ??)
+	- separator selector: select the separator, selected by `FS`: `select("1:2") { color(gray); }` makes the separator between column 1 and 2 gray. (TODO: how to specify border between cells then ??)
 	- range selector: select multiple columns: `select("1-3") { color(white); }` makes column 1, 2 and 3 white. Seperator is not selected.
-	- inclusive range selector: using `"1..3"` would also select the seperators.
+	- inclusive range selector: using `"1..3"` would also select the separators.
 	- since `awk` is imperative, you might need to reset the selector if you don't want it to apply to subsequent rules: `select("2") { color(white); select(); }`
 	- `select` returns FALSE if the current line isn't selected (if there aren't enough columns)
 	- **implementation**: do we need an implicit `display: columns` and/or `display: table`
 
-* grouping construct:
-	- a mechanism to detect a group op multiple lines would be nice to have. The property `border` comes to mind.
-	- Something like: `group("comment") { border(solid, gray); group(); }`
+Grouping construct:
 
-* section(name, value) (experimental): returns true when name/value-combination has not been hit for a line; false otherwise
+* a mechanism to detect a group op multiple lines would be nice to have. The property `border` comes to mind.
+* Something like: `group("comment") { border(solid, gray); group(); }`
+
+
+`section(name, value)` (experimental): returns true when name/value-combination has not been hit for a line; false otherwise
 
 There are no plans to implement input buffering, so related CSS features won't be considered. Just to keep things simple.
 
