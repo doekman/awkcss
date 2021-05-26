@@ -65,6 +65,7 @@ To control the content-box (i.e. lines of text), use the following properties:
 	- __block__ (default): a paragraph (one or more lines) is created.
 	- __none__: the line is not rendered (use this instead of `next`).
 * `width( [nr_columns] )`: set the maximum width of a line. Handy when using background colors. When omitting `nr_columns`, the default value is used, which is the width of the terminal (see variable `COLS` below).
+* `tab_size( nr_characters )`: set the width of a tab-character. Must be a positive integer value. Defaults to `8`.
 * `white_space( [pre | pre_wrap] )`:
 	- __pre\_wrap__ (default): all whitespace is preserved, and when a line doesn't fit the _width_, it is wrapped to the next line. The content-box can be multiple lines.
 	- __pre__: same, but the text which doesn't fit the content box is not be displayed. The content-box will stay one line.
@@ -108,8 +109,6 @@ Finally, check out the `examples/` folder with some idea's how to use `awkcss`.
 
 ## Known issues
 
-* <kbd>TAB</kbd> characters are always expanded to 8 characters
-	- **TODO**: implement [tab-size](https://developer.mozilla.org/en-US/docs/Web/CSS/tab-size) property
 * Since `awk` doesn't calculate the `length` of non-ASCII characters great (and the fact that emoticons takeup 2 characters of space), `awkcss` doesn't either. Lines with non-ASCII may have crippled content boxes.
 * `awkcss` is designed to work with all versions of `awk`, so `gawk` specific capabilities are not used.
 

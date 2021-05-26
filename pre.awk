@@ -36,8 +36,8 @@ BEGIN {
 	_FONT_WEIGHT[   bold="bold"  ] =  1;
 
 	# white_space
-	_WHITE_SPACE[pre_wrap="pre_wrap"] = ! 0; #  TRUE == _do_word_wrap
-	_WHITE_SPACE[     pre="pre"     ] = 0;   # FALSE == _do_word_wrap
+	_WHITE_SPACE[pre_wrap="pre_wrap"] = pre_wrap;
+	_WHITE_SPACE[     pre="pre"     ] = pre;
 
 	# text_overflow
 	_TEXT_OVERFLOW[    clip="clip"    ] = "";
@@ -52,6 +52,10 @@ function section(scope, value) {
 			return 0;
 	_section[scope] = value;
 	return ! 0;
+}
+function count(ch		, a) {
+	split($0, a, ch);
+	return length(a) - 1;
 }
 function str_mul(str, nr) {
 	res = sprintf("%" nr "s", " ");
@@ -69,7 +73,7 @@ function _calculate_line_properties() {
 	_calculate_line_property(_width);
 	_calculate_line_property(_tab_size);
 	_calculate_line_property(_display);
-	_calculate_line_property(_do_word_wrap);
+	_calculate_line_property(_white_space);
 	_calculate_line_property(_text_overflow);
 	# TODO: system defined ansi-codes now can be overwritten by user defined codes.
 	# Undesireable because multiple CSS properties are stored in the same structure.
@@ -109,7 +113,7 @@ function width(value) {
 function white_space(value) {
 	#printf "WS[%s:%s]", NR, value
 	if (value in _WHITE_SPACE)
-		_do_word_wrap[NR] = _WHITE_SPACE[value];
+		_white_space[NR] = _WHITE_SPACE[value];
 	else
 		warning("white_space", value);
 }
