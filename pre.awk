@@ -59,14 +59,15 @@ function str_mul(str, nr) {
 	return res;
 }
 function warning(property, value) {
-	printf "‼️ %s value '%s' is unknown and will be ignored\n", property, value > "/dev/stderr";
+	printf "‼️ %s value '%s' is not recognized and will be ignored\n", property, value, reason > "/dev/stderr";
 }
 function _calculate_line_property(line_property) {
 	# The basis of the cascade
 	line_property[here] = NR in line_property ? line_property[NR] : line_property[0];
 }
 function _calculate_line_properties() {
-	_calculate_line_property(_content_width);
+	_calculate_line_property(_width);
+	_calculate_line_property(_tab_size);
 	_calculate_line_property(_display);
 	_calculate_line_property(_do_word_wrap);
 	_calculate_line_property(_text_overflow);
@@ -89,11 +90,21 @@ function display(value) {
 	else
 		warning("display", value);
 }
-function width(value) {
+function tab_size(value) {
 	if (value == "") 
-		_content_width[NR] = COLS;
+		_tab_size[NR] = 8;
+	else if (value >= 0 && value==int(value))
+		_tab_size[NR] = int(value);
 	else
-		_content_width[NR] = int(value);
+		warning("tab_size", value);
+}
+function width(value) {
+	if (value == "")
+		_width[NR] = COLS;
+	else if (value > 0 && value==int(value))
+		_width[NR] = int(value);
+	else
+		warning("width", value);
 }
 function white_space(value) {
 	#printf "WS[%s:%s]", NR, value

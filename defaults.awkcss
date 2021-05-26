@@ -1,6 +1,7 @@
 # user agent AWKCSS rules
 BEGIN {
-	width();                  # Necessary
+	width();                  # Code default would be 0
+	tab_size(8);              # Code default would be 0
 	display(block);           # Necessary
 	white_space("pre_wrap");  # Code default would be "pre"
 	text_overflow("clip");    # Code default would be "clip"
