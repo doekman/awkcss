@@ -78,7 +78,7 @@ else
 			exit_code=0
 		fi
 
-		if [[ -f $string_file ]]; then
+		if [[ ${string_file:-} && -f $string_file ]]; then
 			if [[ -z $debug ]]; then
 				rm -f "$string_file"
 			else

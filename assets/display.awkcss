@@ -1,0 +1,6 @@
+BEGIN {
+	width(30);
+}
+/^#/ {
+	display(none);
+}

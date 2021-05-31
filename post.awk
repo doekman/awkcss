@@ -26,7 +26,7 @@ function content(text) {
 	if (_display[here] == block) {
 		if (_white_space[here] == pre_wrap) {
 			_index = 0;
-			while (_index <= length(text)) {
+			while (_index == 0 || _index < length(text)) {
 				#printf "[%s]", _index
 				_print_line(text, _index);
 				_index += _width[here];
