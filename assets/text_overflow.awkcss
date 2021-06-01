@@ -1,0 +1,15 @@
+BEGIN {
+	white_space(pre);
+	width(18);
+	text_overflow(clip);
+}
+/^-/ {
+	text_overflow("hellip"); # No error here, since it's just a string, not an enum
+	text_overflow(ellipsis);
+}
+/^\+/ {
+	text_overflow("8<");
+}
+/^\*/ {
+	text_overflow("2,🎬");
+}

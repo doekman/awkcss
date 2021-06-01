@@ -1,0 +1,8 @@
+BEGIN {
+	white_space(pre);
+	width(25);
+}
+
+/^#/ {
+	white_space(pre_wrap);
+}

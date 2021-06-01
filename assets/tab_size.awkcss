@@ -1,0 +1,14 @@
+BEGIN {
+	width(100);
+	tab_size(8);
+#	part = 1;
+}
+
+#/NOW WITH TAB_SIZE 3/ {
+#	part = 2;
+#}
+#
+#part == 2 {
+#	width(20);
+#	tab_size(3);
+#}

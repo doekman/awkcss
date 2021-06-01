@@ -22,15 +22,18 @@ END_COMMENT
 
 function usage {
     cat <<END_USAGE
-Usage: $(basename "$0") COMMAND
+Usage: $0 [COMMAND [ARGUMENTS]]
 
 Commands:
-    run_all: run all test-cases (default)
-    run NAME: run one test-case
-    list: list all test-cases
-    clean: remove generated files
-    create NAME: create all files for one test-case
-    help: show this screen
+
+    run_all [GREP_FILTER]  (default) run all/some (depending on GREP_FILTER) test-cases
+    list [GREP_FILTER]     list all/some (depending on GREP_FILTER) test-cases
+    run NAME               run specific test-case. (NAME is an .awkcss filename)
+    show NAME              show the output (stdout/stderr) for the specific test-case
+
+    clean                  remove generated files
+    create NAME            create all files for one test-case
+    help                   show this screen
 
 END_USAGE
     if [[ $# -gt 0 ]]; then
@@ -60,15 +63,17 @@ function remove_ansi_codes {
     sed $'s/\e\\[[0-9;:]*[a-zA-Z]//g'
 }
 
+function show_test {
+    declare name="$1"
+    awkcss -f "$name" "${name/.awkcss/.input}"
+}
+
 function run_test {
     declare name="$1"
-    if [[ ! $name =~ .*\.awkcss ]]; then
-        name="$name.awkcss"
-    fi
-    awkcss -f "$name" "${name/.awkcss/.input}" | remove_ansi_codes > "${name/.awkcss/.actual}" 2> "${name/.awkcss/.actual_error}"
+    awkcss -f "$name" "${name/.awkcss/.input}" 2> "${name/.awkcss/.actual_error}" | remove_ansi_codes > "${name/.awkcss/.actual}" 
     if diff --brief "${name/.awkcss/.actual}" "${name/.awkcss/.expected}" > /dev/null; then
         if [[ -s "${name/.awkcss/.actual_error}" ]]; then
-            if [[ -f ${f/.awkcss/.expected_error} ]]; then
+            if [[ -f ${name/.awkcss/.expected_error} ]]; then
                 if diff --brief "${name/.awkcss/.actual_error}" "${name/.awkcss/.expected_error}" > /dev/null; then
                     echo "🟢 $name (including _error)"
                 else
@@ -93,13 +98,13 @@ function clean_all_files {
 
 function list_all_tests {
     echo "All test-cases:"
-    for f in $(find_tests); do
+    for f in $(find_tests | grep "${1:-}"); do
         echo "    $f"
     done
 }
 
 function run_all_tests {
-    for f in $(find_tests); do
+    for f in $(find_tests | grep "${1:-}"); do
         run_test "$f"
     done
 }
@@ -119,9 +124,10 @@ cd "$(dirname "$0")"
 
 # Handle arguments
 case "${1:-run_all}" in
-    run_all | runall | all) run_all_tests;;
-    list) list_all_tests;;
+    run_all | runall | all) run_all_tests "${2:-}";;
+    list) list_all_tests "${2:-}";;
     run) if [[ $# -lt 2 ]]; then usage "Provide the name of the test-case"; else run_test "$2"; fi;;
+    show) if [[ $# -lt 2 ]]; then usage "Provide the name of the test-case"; else show_test "$2"; fi;;
     clean) clean_all_files;;
     create) if [[ $# -lt 2 ]]; then usage "Provide the name of the to be created test-case"; else create_test "$2"; fi;;
     help|--help|-h) usage;;
