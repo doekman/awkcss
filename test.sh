@@ -28,8 +28,8 @@ Commands:
 
     run_all [GREP_FILTER]  (default) run all/some (depending on GREP_FILTER) test-cases
     list [GREP_FILTER]     list all/some (depending on GREP_FILTER) test-cases
-    run NAME               run specific test-case. (NAME is an .awkcss filename)
-    show NAME              show the output (stdout/stderr) for the specific test-case
+    run FILENAME           run specific test-case. (FILENAME is an .awkcss filename)
+    show FILENAME          show the output (stdout/stderr) for the specific test-case
 
     clean                  remove generated files
     create NAME            create all files for one test-case
@@ -44,17 +44,29 @@ function show_error {
     >&2 echo "$@"
 }
 
-function find_tests {
-    while IFS= read -r -d '' f
-    do
+function is_test_case {
+    local f="$1"
+    if [[ -f $f ]]; then
         if [[ -f ${f/.awkcss/.input} ]]; then
             if [[ -f ${f/.awkcss/.expected} ]]; then
-                echo "${f}"
+                return 0
             else
                 show_error "🚫 File '$f' exists, but mandatory file '${f/.awkcss/.expected}' not found. Skipping test-case."
+                return 3
             fi
-        else
-            show_error "🚫 File '$f' exists, but mandatory file '${f/.awkcss/.input}' not found. Skipping test-case."
+        fi
+        show_error "🚫 File '$f' exists, but mandatory file '${f/.awkcss/.input}' not found. Skipping test-case."
+        return 2
+    fi
+    show_error "🚫 File '$f' doesn't exist. Skipping test-case."
+    return 1
+}
+
+function find_tests {
+    while IFS= read -r -d '' filename
+    do
+        if is_test_case "$filename"; then
+            echo "${filename}"
         fi
     done <   <(find "$assets" -name "*.awkcss" -print0)
 }
@@ -65,28 +77,32 @@ function remove_ansi_codes {
 
 function show_test {
     declare name="$1"
-    awkcss -f "$name" "${name/.awkcss/.input}"
+    if is_test_case "$name"; then
+        awkcss -f "$name" "${name/.awkcss/.input}"
+    fi
 }
 
 function run_test {
     declare name="$1"
-    awkcss -f "$name" "${name/.awkcss/.input}" 2> "${name/.awkcss/.actual_error}" | remove_ansi_codes > "${name/.awkcss/.actual}" 
-    if diff --brief "${name/.awkcss/.actual}" "${name/.awkcss/.expected}" > /dev/null; then
-        if [[ -s "${name/.awkcss/.actual_error}" ]]; then
-            if [[ -f ${name/.awkcss/.expected_error} ]]; then
-                if diff --brief "${name/.awkcss/.actual_error}" "${name/.awkcss/.expected_error}" > /dev/null; then
-                    echo "🟢 $name (including _error)"
+    if is_test_case "$name"; then
+        awkcss -f "$name" "${name/.awkcss/.input}" 2> "${name/.awkcss/.actual_error}" | remove_ansi_codes > "${name/.awkcss/.actual}" 
+        if diff --brief "${name/.awkcss/.actual}" "${name/.awkcss/.expected}" > /dev/null; then
+            if [[ -s "${name/.awkcss/.actual_error}" ]]; then
+                if [[ -f ${name/.awkcss/.expected_error} ]]; then
+                    if diff --brief "${name/.awkcss/.actual_error}" "${name/.awkcss/.expected_error}" > /dev/null; then
+                        echo "✅ $name (including _error)"
+                    else
+                        echo "🆘 $name on stderr"
+                    fi
                 else
-                    echo "🟥 $name on stderr"
+                    echo "🆘 $name on stderr (no .expected_error exists)"
                 fi
             else
-                echo "🟥 $name on stderr (no .expected_error exists)"
+                echo "✅ $name"
             fi
         else
-            echo "🟢 $name"
+            echo "🆘 $name on stdout"
         fi
-    else
-        echo "🟥 $name on stdout"
     fi
 }
 
@@ -98,6 +114,7 @@ function clean_all_files {
 
 function list_all_tests {
     echo "All test-cases:"
+    echo
     for f in $(find_tests | grep "${1:-}"); do
         echo "    $f"
     done
