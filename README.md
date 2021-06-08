@@ -126,6 +126,7 @@ There can be three levels of selectors:
 * `[pattern] { ... }`: a line selector. Properties apply to the selected lines only.
 
 * `select( [selector] )`: can be used to select columns.
+	- pseudo selectors: like `::before` and `::after`; display:block will generate new line, display:inline will not.
 	- positive _number_: select that column: `select(1) { color(red); }` makes column 1 red.
 	- a negative number would select from the right. So with a 6 column layout, -2 would select column number 5.
 	- separator selector: select the separator, selected by `FS`: `select("1:2") { color(gray); }` makes the separator between column 1 and 2 gray. (TODO: how to specify border between cells then ??)
@@ -135,11 +136,27 @@ There can be three levels of selectors:
 	- `select` returns FALSE if the current line isn't selected (if there aren't enough columns)
 	- **implementation**: do we need an implicit `display: columns` and/or `display: table`
 
+
+Data structure:
+
+	Line properties    : _values[NR][property_name] == property_value
+	Selector properties: _values[NR]['selectors'][selector][property_name] == property_value
+
+	- set_property(property_name, property_value) # implicit: NR, current_selector
+		+ _values[NR][property_name] == property_value
+	- has_property(property_name) # implicit: NR, current_selector
+		+ property_name in _values[NR] ||  property_name in _values[0]
+	- get_property(property_name) # implicit: NR, current_selector
+		+ _values[NR][property_name] || _values[0][property_name]
+
+
 Grouping construct:
 
 * a mechanism to detect a group op multiple lines would be nice to have. The property `border` comes to mind.
 * Something like: `group("comment") { border(solid, gray); group(); }`
-
+	- className and/or div comes to mind
+	- `class_name("class_name") { border(solid, gray); class_name(); }`
+	- `div("class_name") { border(solid, gray); div(); }`
 
 `section(name, value)` (experimental): returns true when name/value-combination has not been hit for a line; false otherwise
 
