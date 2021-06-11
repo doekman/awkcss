@@ -1,7 +1,4 @@
 BEGIN {
-	# symbols
-	here = "here";
-
 	# color & background_color
 	_COLORS[  black="black"  ] = 0; # black
 	_COLORS[    red="red"    ] = 1;
@@ -65,8 +62,15 @@ function str_mul(str, nr) {
 function warning(property, value) {
 	printf "‼️ %s value '%s' is not recognized and will be ignored\n", property, value, reason > "/dev/stderr";
 }
+# _BAT == Big AwkCss Table
 function set_property(property_name, property_value) {
 	_BAT[NR, property_name] = property_value;
+}
+function append_property(property_name, property_value, prefix		, new_value) {
+	if ((NR, property_name) in _BAT) {
+		new_value = _BAT[NR, property_name] prefix;
+	}
+	_BAT[NR, property_name] = new_value property_value;
 }
 function get_property(property_name) {
 	if ((NR, property_name) in _BAT) 
@@ -75,23 +79,15 @@ function get_property(property_name) {
 		return _BAT[0, property_name];
 }
 
-function _calculate_line_property(line_property) {
-	# The basis of the cascade
-	line_property[here] = NR in line_property ? line_property[NR] : line_property[0];
-}
-function _calculate_line_properties() {
-	# TODO: system defined ansi-codes now can be overwritten by user defined codes.
-	# Undesireable because multiple CSS properties are stored in the same structure.
-	_ansi_codes[here] = 0 in _ansi_codes ? _ansi_codes[0] : "";
-	if (NR in _ansi_codes) {
-		_ansi_codes[here] = _ansi_codes[here] (length(_ansi_codes[here]) > 0 ? ";" : "") _ansi_codes[NR]
+function _get_ansi_codes(		result) {
+	result = (0, "ansi_codes") in _BAT ? _BAT[0, "ansi_codes"] : "";
+	if ((NR, "ansi_codes") in _BAT) {
+		result = result (length(result) > 0 ? ";" : "") _BAT[NR, "ansi_codes"]
 	}
+	return result;
 }
 function _set_ansi_code(value) {
-	if (length(_ansi_codes[NR]) > 0)
-		_ansi_codes[NR] = _ansi_codes[NR] ";" value;
-	else
-		_ansi_codes[NR] = value;
+	append_property("ansi_codes", value, ";");
 }
 function display(value) {
 	if (value in _DISPLAY)
