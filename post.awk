@@ -19,7 +19,7 @@ function _print_line(text, from_index		, terminal_line, pos, tab_size, text_over
 		}
 		terminal_line = substr(terminal_line, 0, length(terminal_line) - text_overflow_parts[1]) text_overflow_parts[2]
 	}
-	printf "\033[%sm%-" (get_property("width")) "s\033[0m\n", _get_ansi_codes(), terminal_line;
+	printf "\033[%sm%-" (get_property("width")) "s\033[0m\n", append_get_property("ansi_codes"), terminal_line;
 }
 
 function content(text) {
@@ -27,7 +27,6 @@ function content(text) {
 		if (get_property("white_space") == pre_wrap) {
 			_index = 0;
 			while (_index == 0 || _index < length(text)) {
-				#printf "[%s]", _index
 				_print_line(text, _index);
 				_index += get_property("width");
 			}

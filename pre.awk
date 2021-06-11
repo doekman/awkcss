@@ -66,11 +66,10 @@ function warning(property, value) {
 function set_property(property_name, property_value) {
 	_BAT[NR, property_name] = property_value;
 }
-function append_property(property_name, property_value, prefix		, new_value) {
-	if ((NR, property_name) in _BAT) {
-		new_value = _BAT[NR, property_name] prefix;
-	}
-	_BAT[NR, property_name] = new_value property_value;
+function append_property(property_name, property_value		, the_value) {
+	if ((NR, property_name) in _BAT)
+		the_value = _BAT[NR, property_name] ";";
+	_BAT[NR, property_name] = the_value property_value;
 }
 function get_property(property_name) {
 	if ((NR, property_name) in _BAT) 
@@ -78,16 +77,12 @@ function get_property(property_name) {
 	if ((0, property_name) in _BAT)
 		return _BAT[0, property_name];
 }
-
-function _get_ansi_codes(		result) {
-	result = (0, "ansi_codes") in _BAT ? _BAT[0, "ansi_codes"] : "";
-	if ((NR, "ansi_codes") in _BAT) {
-		result = result (length(result) > 0 ? ";" : "") _BAT[NR, "ansi_codes"]
+function append_get_property(property_name		, result) {
+	result = (0, property_name) in _BAT ? _BAT[0, property_name] : "";
+	if ((NR, property_name) in _BAT) {
+		result = result (length(result) > 0 ? ";" : "") _BAT[NR, property_name];
 	}
 	return result;
-}
-function _set_ansi_code(value) {
-	append_property("ansi_codes", value, ";");
 }
 function display(value) {
 	if (value in _DISPLAY)
@@ -120,19 +115,19 @@ function white_space(value) {
 }
 function color(value) {
 	if (value in _COLORS)
-		_set_ansi_code(30+_COLORS[value])
+		append_property("ansi_codes", 30+_COLORS[value])
 	else
 		warning("color", value);
 }
 function background_color(value) {
 	if (value in _COLORS)
-		_set_ansi_code(40+_COLORS[value])
+		append_property("ansi_codes", 40+_COLORS[value])
 	else
 		warning("background_color", value);
 }
 function text_decoration_line2(value) {
 	if (value in _TEXT_DECORATION_LINE)
-		_set_ansi_code(_TEXT_DECORATION_LINE[value])
+		append_property("ansi_codes", _TEXT_DECORATION_LINE[value])
 	else
 		warning("text_decoration_line", value);
 }
@@ -145,7 +140,7 @@ function text_decoration(value1, value2) {
 }
 function font_weight(value) {
 	if (value in _FONT_WEIGHT)
-		_set_ansi_code(_FONT_WEIGHT[value])
+		append_property("ansi_codes", _FONT_WEIGHT[value])
 	else
 		warning("font_weight", value);
 }
