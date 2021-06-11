@@ -1,6 +1,6 @@
 BEGIN {
 }
-function set_property(property_name, property_value) {
+function sset_property(property_name, property_value) {
     _values[NR, property_name] = property_value;
 }
 #    if (NR in _values) {
@@ -16,14 +16,14 @@ function set_property(property_name, property_value) {
 #function has_property(property_name) {
 #    return property_name in _values[NR] || property_name in _values[0];
 #}
-#function get_property(property_name) {
-#    if (property_name in _values[NR]) 
-#        return _values[NR][property_name]
-#    if (property_name in _values[0]) 
-#        return _values[0][property_name]
-#}
+function gget_property(property_name) {
+    if ((NR, property_name) in _values) 
+        return _values[NR, property_name]
+    if ((0, property_name) in _values) 
+        return _values[0, property_name]
+}
 {
-    set_property($1, $2);
+    sset_property($1, $2);
     printf "%s = %s\n", $1, $2
 }
 
@@ -34,4 +34,8 @@ END {
         else
             printf "- %s = %s\n", ding, _values[ding];
     }
+    NR=1
+    printf "[%s]\n", gget_property("@")
+    printf "[%s]\n", gget_property("#")
+    printf "[%s]\n", gget_property("±")
 }
