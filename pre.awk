@@ -65,16 +65,21 @@ function str_mul(str, nr) {
 function warning(property, value) {
 	printf "‼️ %s value '%s' is not recognized and will be ignored\n", property, value, reason > "/dev/stderr";
 }
+function set_property(property_name, property_value) {
+	_BAT[NR, property_name] = property_value;
+}
+function get_property(property_name) {
+	if ((NR, property_name) in _BAT) 
+		return _BAT[NR, property_name];
+	if ((0, property_name) in _BAT)
+		return _BAT[0, property_name];
+}
+
 function _calculate_line_property(line_property) {
 	# The basis of the cascade
 	line_property[here] = NR in line_property ? line_property[NR] : line_property[0];
 }
 function _calculate_line_properties() {
-	_calculate_line_property(_width);
-	_calculate_line_property(_tab_size);
-	_calculate_line_property(_display);
-	_calculate_line_property(_white_space);
-	_calculate_line_property(_text_overflow);
 	# TODO: system defined ansi-codes now can be overwritten by user defined codes.
 	# Undesireable because multiple CSS properties are stored in the same structure.
 	_ansi_codes[here] = 0 in _ansi_codes ? _ansi_codes[0] : "";
@@ -90,30 +95,30 @@ function _set_ansi_code(value) {
 }
 function display(value) {
 	if (value in _DISPLAY)
-		_display[NR] = _DISPLAY[value];
+		set_property("display", _DISPLAY[value]);
 	else
 		warning("display", value);
 }
 function tab_size(value) {
 	if (value == "") 
-		_tab_size[NR] = 8;
+		set_property("tab_size", 8);
 	else if (value >= 0 && value==int(value))
-		_tab_size[NR] = int(value);
+		set_property("tab_size", int(value));
 	else
 		warning("tab_size", value);
 }
 function width(value) {
 	if (value == "")
-		_width[NR] = COLS;
+		set_property("width", COLS);
 	else if (value > 0 && value==int(value))
-		_width[NR] = int(value);
+		set_property("width", int(value));
 	else
 		warning("width", value);
 }
 function white_space(value) {
 	#printf "WS[%s:%s]", NR, value
 	if (value in _WHITE_SPACE)
-		_white_space[NR] = _WHITE_SPACE[value];
+		set_property("white_space", _WHITE_SPACE[value]);
 	else
 		warning("white_space", value);
 }
@@ -150,7 +155,7 @@ function font_weight(value) {
 }
 function text_overflow(value) {
 	if (value in _TEXT_OVERFLOW)
-		_text_overflow[NR] = _TEXT_OVERFLOW[value];
+		set_property("text_overflow", _TEXT_OVERFLOW[value]);
 	else
-		_text_overflow[NR] = value; # Use supplied string as text-overflow (experimental)
+		set_property("text_overflow", value); # Use supplied string as text-overflow (experimental)
 }
