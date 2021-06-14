@@ -1,25 +1,39 @@
-function _print_line(text, from_index		, terminal_line, pos, tab_size, text_overflow, text_overflow_parts, ansi_codes) {
-	terminal_line = substr(text, from_index + 1, get_property("width"));
-	# insert tabs
+function _handle_text_overflow(terminal_line, width		, text_overflow, text_overflow_parts) {
+	if (length(terminal_line) > width) {
+		text_overflow = get_property("text_overflow")
+		if (text_overflow) {
+			if (index(text_overflow, ",") > 0) {
+				split(text_overflow, text_overflow_parts, ",") # because of UTF-8
+			}
+			else {
+				text_overflow_parts[1] = length(text_overflow)
+				text_overflow_parts[2] = text_overflow
+			}
+			return substr(terminal_line, 0, width - text_overflow_parts[1]) text_overflow_parts[2]
+		}
+		return substr(terminal_line, 0, width); # just clip the text
+	}
+	return terminal_line;
+}
+
+function _print_line(text, from_index		, width, terminal_line, pos, tab_size, tab_width, nr_tabs_inserted, ansi_codes) {
+	width = get_property("width");
+	tab_size = get_property("tab_size");
+	terminal_line = substr(text, from_index + 1);
+	# expand tabs
+	nr_tabs_inserted = 0
 	while (1) {
-		if ((pos = index(terminal_line, "\t")) == 0)
+		pos = index(terminal_line, "\t");
+		if (pos == 0 || pos > width - tab_size)
 			break;
-		tab_size = get_property("tab_size");
-		tab_size = tab_size - (pos - 1) % tab_size;
-		sub("\t", sprintf("%" tab_size "s", ""), terminal_line);
+		tab_width = tab_size - (pos - 1) % tab_size;
+		sub("\t", sprintf("%" tab_width "s", ""), terminal_line);
+		nr_tabs_inserted += 1;
 	}
-	text_overflow = get_property("text_overflow")
-	if (text_overflow && length(terminal_line) < length(text)) {
-		if (index(text_overflow, ",") > 0) {
-			split(text_overflow, text_overflow_parts, ",") # because of UTF-8
-		}
-		else {
-			text_overflow_parts[1] = length(text_overflow)
-			text_overflow_parts[2] = text_overflow
-		}
-		terminal_line = substr(terminal_line, 0, length(terminal_line) - text_overflow_parts[1]) text_overflow_parts[2]
-	}
+	terminal_line = _handle_text_overflow(terminal_line, width);
+	# output the line
 	printf "\033[%sm%-" (get_property("width")) "s\033[0m\n", append_get_property("ansi_codes"), terminal_line;
+	return width - ( (tab_size - 1) * nr_tabs_inserted)
 }
 
 function content(text) {
@@ -27,8 +41,7 @@ function content(text) {
 		if (get_property("white_space") == pre_wrap) {
 			_index = 0;
 			while (_index == 0 || _index < length(text)) {
-				_print_line(text, _index);
-				_index += get_property("width");
+				_index += _print_line(text, _index);
 			}
 		}
 		else {
