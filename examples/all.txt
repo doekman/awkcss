@@ -1,0 +1,46 @@
+01. foreground black
+02. foreground red
+03. foreground green
+04. foreground yellow
+05. foreground blue
+06. foreground magenta
+07. foreground cyan
+08. foreground white
+10. foreground gray
+11. foreground bright_red
+12. foreground bright_green
+13. foreground bright_yellow
+14. foreground bright_blue
+15. foreground bright_magenta
+16. foreground bright_cyan
+17. foreground bright_white
+21. background black
+22. background red
+23. background green
+24. background yellow
+25. background blue
+26. background magenta
+27. background cyan
+28. background white
+30. background gray
+31. background bright_red
+32. background bright_green
+33. background bright_yellow
+34. background bright_blue
+35. background bright_magenta
+36. background bright_cyan
+37. background bright_white
+40. bold
+41. underline
+42. blink
+43. bold underline blink
+50. pre-wrap width 25
+51. pre-wrap display none
+52. pre-wrap width 21 and some more
+60. pre width 25
+61. pre width more text to come
+62. pre width overflow normal
+63. pre width overflow scissors
+64.     _____   ____    _____
+64.	tab 8	tab8	tab 8
+

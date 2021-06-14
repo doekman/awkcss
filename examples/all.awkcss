@@ -1,0 +1,45 @@
+BEGIN { width(50); }
+/^01\./ { color(black); background_color(white); }
+/^02\./ { color(red); }
+/^03\./ { color(green); }
+/^04\./ { color(yellow); }
+/^05\./ { color(blue); }
+/^06\./ { color(magenta); }
+/^07\./ { color(cyan); }
+/^08\./ { color(white); }
+/^10\./ { color(gray); }
+/^11\./ { color(bright_red); }
+/^12\./ { color(bright_green); }
+/^13\./ { color(bright_yellow); }
+/^14\./ { color(bright_blue); }
+/^15\./ { color(bright_magenta); }
+/^16\./ { color(bright_cyan); }
+/^17\./ { color(bright_white); }
+/^21\./ { background_color(black); color(white);}
+/^22\./ { background_color(red); }
+/^23\./ { background_color(green); }
+/^24\./ { background_color(yellow); }
+/^25\./ { background_color(blue); }
+/^26\./ { background_color(magenta); }
+/^27\./ { background_color(cyan); }
+/^28\./ { background_color(white); }
+/^30\./ { background_color(gray); }
+/^31\./ { background_color(bright_red); }
+/^32\./ { background_color(bright_green); }
+/^33\./ { background_color(bright_yellow); }
+/^34\./ { background_color(bright_blue); }
+/^35\./ { background_color(bright_magenta); }
+/^36\./ { background_color(bright_cyan); }
+/^37\./ { background_color(bright_white); color(black); }
+/^40\./ { font_weight(bold); }
+/^41\./ { text_decoration(underline); }
+/^42\./ { text_decoration(blink); }
+/^43\./ { font_weight(bold); text_decoration(underline, blink); }
+/^50\./ { white_space(pre_wrap); width(25); }
+/^51\./ { white_space(pre_wrap); display(none); }
+/^52\./ { white_space(pre_wrap); width(21); }
+/^60\./ { white_space(pre); width(25); }
+/^61\./ { white_space(pre); width(25); }
+/^62\./ { white_space(pre); width(25); text_overflow(ellipsis); }
+/^63\./ { white_space(pre); width(25); text_overflow("8<"); }
+

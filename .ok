@@ -5,6 +5,7 @@ md: head -n 35 README.md | awkcss -f examples/markdown.awkcss "$@"
 zebra: awkcss -s examples/zebra.awkcss "$@" ~/.profile ~/.psqlrc 
 awkcss -f examples/color-interleaving.awkcss "$@" examples/markdown.awkcss
 awkcss -F ':' -s examples/passwd.awkcss "$@" /etc/passwd
+all: awkcss -f examples/all.awkcss examples/all.txt
 # navigating away
 cd; awkcss -s examples/zebra.awkcss < ${1:-.profile}  #or .bashrc; `cd -` to go back
 # tests

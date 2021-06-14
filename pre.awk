@@ -1,44 +1,39 @@
 BEGIN {
 	# color & background_color
-	_COLORS[  black="black"  ] = 0; # black
-	_COLORS[    red="red"    ] = 1;
-	_COLORS[  green="green"  ] = 2;
-	_COLORS[ yellow="yellow" ] = 3;
-	_COLORS[   blue="blue"   ] = 4;
-	_COLORS[magenta="magenta"] = 5;
-	_COLORS[   cyan="cyan"   ] = 6;
-	_COLORS[  white="white"  ] = 7; # white
-
-	_COLORS[          gray="gray"          ] = 60;
-	_COLORS[  bright_black="bright_black"  ] = 60;
-	_COLORS[    bright_red="bright_red"    ] = 61;
-	_COLORS[  bright_green="bright_green"  ] = 62;
-	_COLORS[ bright_yellow="bright_yellow" ] = 63;
-	_COLORS[   bright_blue="bright_blue"   ] = 64;
-	_COLORS[bright_magenta="bright_magenta"] = 65;
-	_COLORS[   bright_cyan="bright_cyan"   ] = 66;
-	_COLORS[  bright_white="bright_white"  ] = 67; # bright_white
-
+	_ENUM["color",   black="black"  ] = 0; # black
+	_ENUM["color",     red="red"    ] = 1;
+	_ENUM["color",   green="green"  ] = 2;
+	_ENUM["color",  yellow="yellow" ] = 3;
+	_ENUM["color",    blue="blue"   ] = 4;
+	_ENUM["color", magenta="magenta"] = 5;
+	_ENUM["color",    cyan="cyan"   ] = 6;
+	_ENUM["color",   white="white"  ] = 7; # white
+	# bright colors
+	_ENUM["color",           gray="gray"          ] = 60;
+	_ENUM["color",   bright_black="bright_black"  ] = 60;
+	_ENUM["color",     bright_red="bright_red"    ] = 61;
+	_ENUM["color",   bright_green="bright_green"  ] = 62;
+	_ENUM["color",  bright_yellow="bright_yellow" ] = 63;
+	_ENUM["color",    bright_blue="bright_blue"   ] = 64;
+	_ENUM["color", bright_magenta="bright_magenta"] = 65;
+	_ENUM["color",    bright_cyan="bright_cyan"   ] = 66;
+	_ENUM["color",   bright_white="bright_white"  ] = 67; # bright_white
 	# display
-	_DISPLAY[block="block"] = block;
-	_DISPLAY[ none="none" ] = none;
-
+	_ENUM["display", block="block"] = block;
+	_ENUM["display",  none="none" ] = none;
 	# text_decoration_line
-	_TEXT_DECORATION_LINE[     none="none"     ] = 24;
-	_TEXT_DECORATION_LINE[underline="underline"] =  4;
-	_TEXT_DECORATION_LINE[    blink="blink"    ] =  5;
-
+	_ENUM["text_decoration_line",      none="none"     ] = 24;
+	_ENUM["text_decoration_line", underline="underline"] =  4;
+	_ENUM["text_decoration_line",     blink="blink"    ] =  5;
 	# font_weight
-	_FONT_WEIGHT[ normal="normal"] = 21;
-	_FONT_WEIGHT[   bold="bold"  ] =  1;
-
+	_ENUM["font_weight", normal="normal"] = 21;
+	_ENUM["font_weight",   bold="bold"  ] =  1;
 	# white_space
-	_WHITE_SPACE[pre_wrap="pre_wrap"] = pre_wrap;
-	_WHITE_SPACE[     pre="pre"     ] = pre;
-
+	_ENUM["white_space", pre_wrap="pre_wrap"] = pre_wrap;
+	_ENUM["white_space",      pre="pre"     ] = pre;
 	# text_overflow
-	_TEXT_OVERFLOW[    clip="clip"    ] = "";
-	_TEXT_OVERFLOW[ellipsis="ellipsis"] = "1,…"; #because of UTF-8, "<char-lenght>,<characters>"
+	_ENUM["text_overflow",     clip="clip"    ] = "";
+	_ENUM["text_overflow", ellipsis="ellipsis"] = "1,…"; #because of UTF-8, "<char-lenght>,<characters>"
 }
 # section is gemodelleerd naar console.group()
 # https://developer.mozilla.org/en-US/docs/Web/API/Console#using_groups_in_the_console
@@ -85,8 +80,8 @@ function append_get_property(property_name		, result) {
 	return result;
 }
 function display(value) {
-	if (value in _DISPLAY)
-		set_property("display", _DISPLAY[value]);
+	if (("display", value) in _ENUM)
+		set_property("display", _ENUM["display",value]);
 	else
 		warning("display", value);
 }
@@ -108,26 +103,26 @@ function width(value) {
 }
 function white_space(value) {
 	#printf "WS[%s:%s]", NR, value
-	if (value in _WHITE_SPACE)
-		set_property("white_space", _WHITE_SPACE[value]);
+	if (("white_space", value) in _ENUM)
+		set_property("white_space", _ENUM["white_space", value]);
 	else
 		warning("white_space", value);
 }
 function color(value) {
-	if (value in _COLORS)
-		append_property("ansi_codes", 30+_COLORS[value])
+	if (("color", value) in _ENUM)
+		append_property("ansi_codes", 30+_ENUM["color", value])
 	else
 		warning("color", value);
 }
 function background_color(value) {
-	if (value in _COLORS)
-		append_property("ansi_codes", 40+_COLORS[value])
+	if (("color", value) in _ENUM)
+		append_property("ansi_codes", 40+_ENUM["color", value])
 	else
 		warning("background_color", value);
 }
 function text_decoration_line2(value) {
-	if (value in _TEXT_DECORATION_LINE)
-		append_property("ansi_codes", _TEXT_DECORATION_LINE[value])
+	if (("text_decoration_line", value) in _ENUM)
+		append_property("ansi_codes", _ENUM["text_decoration_line", value])
 	else
 		warning("text_decoration_line", value);
 }
@@ -139,14 +134,14 @@ function text_decoration(value1, value2) {
 	text_decoration_line(value1, value2);
 }
 function font_weight(value) {
-	if (value in _FONT_WEIGHT)
-		append_property("ansi_codes", _FONT_WEIGHT[value])
+	if (("font_weight", value) in _ENUM)
+		append_property("ansi_codes", _ENUM["font_weight", value])
 	else
 		warning("font_weight", value);
 }
 function text_overflow(value) {
-	if (value in _TEXT_OVERFLOW)
-		set_property("text_overflow", _TEXT_OVERFLOW[value]);
+	if (("text_overflow", value) in _ENUM)
+		set_property("text_overflow", _ENUM["text_overflow", value]);
 	else
 		set_property("text_overflow", value); # Use supplied string as text-overflow (experimental)
 }
