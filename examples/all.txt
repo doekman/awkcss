@@ -30,10 +30,11 @@
 35. background bright_magenta
 36. background bright_cyan
 37. background bright_white
+---8<---------------------------------------------
 40. bold
 41. underline
 42. blink
-43. bold underline blink
+43. green on red bold underline blink
 50. pre-wrap width 25
 51. pre-wrap display none
 52. pre-wrap width 21 and some more

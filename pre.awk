@@ -54,77 +54,79 @@ function str_mul(str, nr) {
 	gsub(" ", str, res);
 	return res;
 }
-function warning(property, value) {
+# -=[ internal functions ]=-
+function _warning(property, value) {
 	printf "‼️ %s value '%s' is not recognized and will be ignored\n", property, value, reason > "/dev/stderr";
 }
 # _BAT == Big AwkCss Table
-function set_property(property_name, property_value) {
+function _set_property(property_name, property_value) {
 	_BAT[NR, property_name] = property_value;
 }
-function append_property(property_name, property_value		, the_value) {
+function _append_property(property_name, property_value		, the_value) {
 	if ((NR, property_name) in _BAT)
 		the_value = _BAT[NR, property_name] ";";
 	_BAT[NR, property_name] = the_value property_value;
 }
-function get_property(property_name) {
+function _get_property(property_name) {
 	if ((NR, property_name) in _BAT) 
 		return _BAT[NR, property_name];
 	if ((0, property_name) in _BAT)
 		return _BAT[0, property_name];
 }
-function append_get_property(property_name		, result) {
+function _append_get_property(property_name		, result) {
 	result = (0, property_name) in _BAT ? _BAT[0, property_name] : "";
 	if ((NR, property_name) in _BAT) {
 		result = result (length(result) > 0 ? ";" : "") _BAT[NR, property_name];
 	}
 	return result;
 }
+# -=[ Public properties ]=-
 function display(value) {
 	if (("display", value) in _ENUM)
-		set_property("display", _ENUM["display",value]);
+		_set_property("display", _ENUM["display",value]);
 	else
-		warning("display", value);
+		_warning("display", value);
 }
 function tab_size(value) {
 	if (value == "") 
-		set_property("tab_size", 8);
+		_set_property("tab_size", 8);
 	else if (value >= 0 && value==int(value))
-		set_property("tab_size", int(value));
+		_set_property("tab_size", int(value));
 	else
-		warning("tab_size", value);
+		_warning("tab_size", value);
 }
 function width(value) {
 	if (value == "")
-		set_property("width", COLS);
+		_set_property("width", COLS);
 	else if (value > 0 && value==int(value))
-		set_property("width", int(value));
+		_set_property("width", int(value));
 	else
-		warning("width", value);
+		_warning("width", value);
 }
 function white_space(value) {
 	#printf "WS[%s:%s]", NR, value
 	if (("white_space", value) in _ENUM)
-		set_property("white_space", _ENUM["white_space", value]);
+		_set_property("white_space", _ENUM["white_space", value]);
 	else
-		warning("white_space", value);
+		_warning("white_space", value);
 }
 function color(value) {
 	if (("color", value) in _ENUM)
-		append_property("ansi_codes", 30+_ENUM["color", value])
+		_append_property("ansi_codes", 30+_ENUM["color", value])
 	else
-		warning("color", value);
+		_warning("color", value);
 }
 function background_color(value) {
 	if (("color", value) in _ENUM)
-		append_property("ansi_codes", 40+_ENUM["color", value])
+		_append_property("ansi_codes", 40+_ENUM["color", value])
 	else
-		warning("background_color", value);
+		_warning("background_color", value);
 }
 function text_decoration_line2(value) {
 	if (("text_decoration_line", value) in _ENUM)
-		append_property("ansi_codes", _ENUM["text_decoration_line", value])
+		_append_property("ansi_codes", _ENUM["text_decoration_line", value])
 	else
-		warning("text_decoration_line", value);
+		_warning("text_decoration_line", value);
 }
 function text_decoration_line(value1, value2) {
 	text_decoration_line2(value1);
@@ -135,13 +137,13 @@ function text_decoration(value1, value2) {
 }
 function font_weight(value) {
 	if (("font_weight", value) in _ENUM)
-		append_property("ansi_codes", _ENUM["font_weight", value])
+		_append_property("ansi_codes", _ENUM["font_weight", value])
 	else
-		warning("font_weight", value);
+		_warning("font_weight", value);
 }
 function text_overflow(value) {
 	if (("text_overflow", value) in _ENUM)
-		set_property("text_overflow", _ENUM["text_overflow", value]);
+		_set_property("text_overflow", _ENUM["text_overflow", value]);
 	else
-		set_property("text_overflow", value); # Use supplied string as text-overflow (experimental)
+		_set_property("text_overflow", value); # Use supplied string as text-overflow (experimental)
 }

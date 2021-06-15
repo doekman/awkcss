@@ -1,4 +1,5 @@
 BEGIN { width(50); }
+/^---/ { color(gray); }
 /^01\./ { color(black); background_color(white); }
 /^02\./ { color(red); }
 /^03\./ { color(green); }
@@ -34,7 +35,7 @@ BEGIN { width(50); }
 /^40\./ { font_weight(bold); }
 /^41\./ { text_decoration(underline); }
 /^42\./ { text_decoration(blink); }
-/^43\./ { font_weight(bold); text_decoration(underline, blink); }
+/^43\./ { font_weight(bold); text_decoration(underline, blink);color(bright_green); background_color(red) }
 /^50\./ { white_space(pre_wrap); width(25); }
 /^51\./ { white_space(pre_wrap); display(none); }
 /^52\./ { white_space(pre_wrap); width(21); }
