@@ -201,6 +201,26 @@ Boxes can have the following properties:
 
 * `named_line := none | solid | double | thick`
 	- light, heavy & double Unicode box drawing
+	- connector[position_numpad, vertical_named_line, horizontal_named_line]
+		+ position_numpad: 12346789 on numeric keypad
+	- horizontal & vertical
+* combinaties (voor 1..9):
+	- light-light:   "└┴┘├┼┤┌┬┐"
+	- light-heavy:   "┕┷┙┝┿┥┍┯┑"
+	- light-double:  "╘╧╛╞╪╡╒╤╕"
+	- heavy-heavy:   "┗┻┛┣╋┫┏┳┓"
+	- heavy-light:   "┖┸┚┠╂┨┎┰┒"
+	- heavy-double:  ""
+	- double-double: "╚╩╝╠╬╣╔╦╗"
+	- double-light:  "╙╨╜╟╫╢╓╥╖"
+	- double-heavy:  ""
+
+	for combinaties(9x):
+		for numpad_positions(9x):
+			_ENUM["named_line", "connector", 1..9, horizontal_style, vertical_style] = "┌"
+	for styles(3x):
+		_ENUM["named_line", "horizontal", style] = "-"
+		_ENUM["named_line", "vertical", style] = "|"
 
 
 ### Proposition
