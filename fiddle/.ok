@@ -1,4 +1,5 @@
 egrep $'^[^#]' /etc/passwd | head -n 10 | awk -F ':' -f column-test.awk
 awkcss '{ color(red); } count("\t")%2==1 { color(green); } count("\t")==0 { color(magenta); }' tabs.txt
 awkcss -f hash-test.awk hash-test.txt
+awk -f test.awk .ok
 cd ..
