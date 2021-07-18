@@ -1,14 +1,15 @@
-section("BEGIN", FILENAME) {
-	color(yellow);
-	font_weight(bold);
+section("BEGIN", FILENAME) && select("::before") {
+	color(yellow);           # ansi_codes: 30+3==33
+	font_weight(bold);       # ansi_codes: 1
 	white_space("pre");
 	content( sprintf("___[ %s ]%s", FILENAME, str_mul("_", 400)) );
+	select();
 }
 NR % 2 == 0 { 
-	color(white);
-	background_color(black);
+	color(white);            # ansi_codes: 30+7 == 37
+	background_color(black); # ansi_codes: 40+0 == 40
 }
 NR % 2 == 1 { 
-	color(black);
-	background_color(gray);
+	color(black);            # ansi_codes: 30+0 == 30
+	background_color(gray);  # ansi_codes: 40+60 == 100
 }
