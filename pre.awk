@@ -34,7 +34,11 @@ BEGIN {
 	# text_overflow
 	_ENUM["text_overflow",     clip="clip"    ] = "";
 	_ENUM["text_overflow", ellipsis="ellipsis"] = "1,…"; #because of UTF-8, "<char-lenght>,<characters>"
+	
+	# Initialize
+	select();
 }
+
 # section is gemodelleerd naar console.group()
 # https://developer.mozilla.org/en-US/docs/Web/API/Console#using_groups_in_the_console
 # TODO: optioneel een sectionEnd (die wordt inpliciet aangeroepen bij een nieuwe "value" binnen "scope")
@@ -58,7 +62,6 @@ function str_mul(str, nr) {
 function _warning(property, value) {
 	printf "‼️ %s value '%s' is not recognized and will be ignored\n", property, value, reason > "/dev/stderr";
 }
-
 # _BAT == Big AwkCss Table
 function _bat_debug(dump_line		,title, key_combined, key_separate, property_value) {
 	title = sprintf("---[ BAT DUMP %s ]---", dump_line);
@@ -72,27 +75,59 @@ function _bat_debug(dump_line		,title, key_combined, key_separate, property_valu
 		}
 	}
 }
+function _set_property_bare(nr, query, property_name, property_value) {
+	_BAT[nr, query, property_name] = property_value;
+}
 function _set_property(property_name, property_value) {
-	_BAT[NR, property_name] = property_value;
+	_set_property_bare(NR, _QUERY, property_name, property_value)
 }
 function _append_property(property_name, property_value		, the_value) {
-	if ((NR, property_name) in _BAT)
-		the_value = _BAT[NR, property_name] ";";
-	_BAT[NR, property_name] = the_value property_value;
+	if ((NR, _QUERY, property_name) in _BAT)
+		the_value = _BAT[NR, _QUERY, property_name] ";";
+	_BAT[NR, _QUERY, property_name] = the_value property_value;
+}
+function _has_property_bare(nr, query, property_name) {
+	return (nr, query, property_name) in _BAT;
+}
+function _has_property(property_name) {
+	return _has_property_bare(NR, _QUERY, property_name);
+}
+function _get_property_bare(nr, query, property_name) {
+	return _BAT[nr, query, property_name];
 }
 function _get_property(property_name) {
-	if ((NR, property_name) in _BAT) 
-		return _BAT[NR, property_name];
-	if ((0, property_name) in _BAT)
-		return _BAT[0, property_name];
+	if (_has_property_bare(NR, _QUERY, property_name))
+		return _get_property_bare(NR, _QUERY, property_name);
+	if (_has_property_bare(NR, "", property_name))
+		return _get_property_bare(NR, "", property_name);
+	if (_has_property_bare(0, "", property_name))
+		return _get_property_bare(0, "", property_name);
 }
 function _append_get_property(property_name		, result) {
-	result = (0, property_name) in _BAT ? _BAT[0, property_name] : "";
-	if ((NR, property_name) in _BAT) {
-		result = result (length(result) > 0 ? ";" : "") _BAT[NR, property_name];
+	result = (0, _QUERY, property_name) in _BAT ? _BAT[0, _QUERY, property_name] : "";
+	if ((NR, _QUERY, property_name) in _BAT) {
+		result = result (length(result) > 0 ? ";" : "") _BAT[NR, _QUERY, property_name];
 	}
 	return result;
 }
+
+# -=[ Public functions ]=-
+function select(query) {
+	if (query) {
+		if (query ~ /^::(before|after)$/) {
+			_QUERY = query;
+		}
+		else {
+			_warning("select", query);
+			return 0; # False
+		}
+	}
+	else {
+		_QUERY = "";
+	}
+	return ! 0;
+}
+
 # -=[ Public properties ]=-
 function display(value) {
 	if (("display", value) in _ENUM)
@@ -159,4 +194,17 @@ function text_overflow(value) {
 		_set_property("text_overflow", _ENUM["text_overflow", value]);
 	else
 		_set_property("text_overflow", value); # Use supplied string as text-overflow (experimental)
+}
+function content(value		, display_value) {
+	_set_property("content", value);
+	if (_QUERY ~ /^::(before|after)$/) {
+		# Optimization, so renderer can quickly see if there is before/after-work.
+		if (_has_property("display")) {
+			display_value = _get_property("display");
+		}
+		else {
+			display_value = "block"; # default value
+		}
+		_set_property_bare(NR, "", _QUERY, display_value);
+	}
 }

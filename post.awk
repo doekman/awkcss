@@ -36,9 +36,14 @@ function _print_line(text, from_index		, width, terminal_line, pos, tab_size, ta
 	# return the number of characters of the original "text" variable where consumed
 	return width - ( (tab_size - 1) * nr_tabs_expanded)
 }
-# TODO: convert 'content' to property (with ::before and ::after selectors)
-function content(text) {
+function _handle_content(		text) {
 	if (_get_property("display") == block) {
+		if (_has_property("content")) {
+			text = _get_property("content");
+		}
+		else {
+			text = $0;
+		}
 		if (_get_property("white_space") == pre_wrap) {
 			_index = 0;
 			while (_index == 0 || _index < length(text)) {
@@ -53,7 +58,19 @@ function content(text) {
 }
 # Main render rule
 {
-	content($0)
+	select();
+	if (_get_property("::before") == "block") {
+		select("::before");
+		_handle_content();
+		select();
+	}
+	_handle_content(); # handle main line
+	if (_get_property("::after") == "block") {
+		select("::after");
+		_handle_content();
+		select();
+	}
+}
 
 END {
 	if (_DUMP != "") {
