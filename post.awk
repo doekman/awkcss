@@ -54,4 +54,9 @@ function content(text) {
 # Main render rule
 {
 	content($0)
+
+END {
+	if (_DUMP != "") {
+		_bat_debug(_DUMP);
+	}
 }

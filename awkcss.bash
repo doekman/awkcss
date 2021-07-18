@@ -52,6 +52,11 @@ else
 						>&2 echo "awkcss: no library filename provided with -s"; return 3
 					fi;;
 				--debug) debug="True";;
+				--dump) if (( $# > 1 )); then
+							args[${#args[@]}]="-v"; args[${#args[@]}]="_DUMP=$2"; shift
+						else
+							>&2 echo "awkcss: provide a line number with dump (or * for all)"; return 2
+						fi;;
 				--help) _awk_css__usage; return 0;;
 				--version) echo "awkcss $(cat "$AWKCSS_PATH/version.txt")"; return 0;;
 				-*)	>&2 echo "awkcss: unknown option '$1'"; return 1;;

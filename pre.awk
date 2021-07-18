@@ -58,7 +58,20 @@ function str_mul(str, nr) {
 function _warning(property, value) {
 	printf "‼️ %s value '%s' is not recognized and will be ignored\n", property, value, reason > "/dev/stderr";
 }
+
 # _BAT == Big AwkCss Table
+function _bat_debug(dump_line		,title, key_combined, key_separate, property_value) {
+	title = sprintf("---[ BAT DUMP %s ]---", dump_line);
+	print title str_mul("-", COLS - length(title));
+	for ( key_combined in _BAT) {
+		split(key_combined, key_separate, SUBSEP);
+		if (dump_line == "*" || dump_line == key_separate[1]) {
+			property_value = _BAT[key_separate[1], key_separate[2], key_separate[3]];
+			gsub("\t", "\\t", property_value)
+			printf "%s,%s,%s=='%s' (len:%s)\n", key_separate[1], key_separate[2], key_separate[3], property_value, length(property_value);
+		}
+	}
+}
 function _set_property(property_name, property_value) {
 	_BAT[NR, property_name] = property_value;
 }
