@@ -1,0 +1,13 @@
+BEGIN {
+	width(45);
+}
+NR==1 && select("::before") {
+	content("0. The super header selector (::before)");
+	text_decoration(underline);
+	select();
+}
+NR==4 && select("::after") {
+	content("9. The super footer selector (::after)")
+	font_weight(bold);
+	select();
+}
