@@ -27,7 +27,7 @@ The `-f` argument (file) takes relative or absolute paths. Use the `-s` argument
 	cd                                          # go to home folder
 	awkcss -s examples/zebra.awkcss < .profile  # ¹
 
-For a complete description of the AWKCSS language, see the [Reference](Reference.md).
+For a complete description of the AWKCSS language, see the [Reference](./reference.md).
 
 
 ---
