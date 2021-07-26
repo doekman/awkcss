@@ -23,14 +23,14 @@ else
 		function _awk_add_post {
 			if [[ -z $has_post ]]; then
 				args[${#args[@]}]="-f"
-				args[${#args[@]}]="$AWKCSS_PATH/post.awk"
+				args[${#args[@]}]="$AWKCSS_PATH/render.awk"
 				has_post="1"
 			fi
 		}
-		args=(-v "COLS=$(tput cols)" -v "LINES=$(tput lines)" -v "COLORS=$(tput colors)" "-f" "$AWKCSS_PATH/pre.awk" "-f" "$AWKCSS_PATH/defaults.awkcss")
+		args=(-v "COLS=$(tput cols)" -v "LINES=$(tput lines)" -v "COLORS=$(tput colors)" "-f" "$AWKCSS_PATH/library.awk" "-f" "$AWKCSS_PATH/defaults.awkcss")
 		if (( $# == 0)); then _awk_css__usage; return 0; fi
 		while (( $# > 0 )); do
-			if [[ $has_post && $1 = -* ]]; then
+			if [[ $has_program && $1 = -* ]]; then
 				>&2 echo "awkcss: can't supply options after an input file has been specified"; return 4
 			fi
 			case "$1" in
