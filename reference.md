@@ -7,6 +7,25 @@
 An `awk` file is build from pattern-action statements. With `awkcss` we talk about selector-property statements, which make out `awkcss` rules. Multiple rules can apply to one line, like _CSS_. However, in `awk` a rule only applies to a line, so this is true for `awkcss`.
 
 
+## Selectors
+
+You can use any awk-condition to select a line:
+
+	# Will select all lines with three or more consecutive 'e'-characters
+	/e{3,}/ { color(red); }
+	# Will select every odd line
+	NR % 2 == 1 { color(green); }
+
+To select more sophisticated things, you can use the `select`-function. It returns true, if the provided _selector_ can be selected. Always end the rule with a call to `select` without any arguments, to reset the current query.
+
+To add a line before every 100th line, you can use the pseudo-selector `::before`:
+
+	NR % 100 == 0 && select("::before") {
+		content("-=[ Congratulations, another 100 lines processed by AWKCSS! ]=-");
+		text_decoration(blink);
+		select();
+	}
+
 ## Properties
 
 The `awkcss` __properties__ work via function calls. This brings some advantages, one of which is when you use an unknown property, `awk` will stop with an error message.
