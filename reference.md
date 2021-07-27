@@ -16,11 +16,15 @@ You can use any awk-condition to select a line:
 	# Will select every odd line
 	NR % 2 == 1 { color(green); }
 
+To apply a setting to every line, you can either omit the awk-condition, or use the `BEGIN` template. The latter works a bit different, since it only introduces one entry in the CSS DOM. So this is the prefered approach:
+
+	BEGIN { background(gray); }
+
 To select more sophisticated things, you can use the `select`-function. It returns true, if the provided _selector_ can be selected. Always end the rule with a call to `select` without any arguments, to reset the current query.
 
-To add a line before every 100th line, you can use the pseudo-selector `::before`:
+To add a line after every 100th line, you can use the pseudo-selector `::after`:
 
-	NR % 100 == 0 && select("::before") {
+	NR % 100 == 0 && select("::after") {
 		content("-=[ Congratulations, another 100 lines processed by AWKCSS! ]=-");
 		text_decoration(blink);
 		select();
