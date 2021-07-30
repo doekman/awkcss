@@ -5,11 +5,10 @@ Applying style to your terminal session with `awk`, CSS style!
 
 ## Installation
 
-After downloading this repository, add the following to your `~/.profile` file¹ (the script needs to be _sourced_ because it is implemented as a shell function):
+After downloading this repository, add the following to your `~/.bashrc` file¹ (the script needs to be _sourced_ because it is implemented as a shell function):
 
 	. awkcss.bash
 
-_Optional_: when using Textmate (or compatible editor), you could install [AWK syntax highlighting][awk-tmLanguage]. Installing [ok-bash][] will enhance your experience while working with this repository (while making you smarter in the process).
 
 
 ## Usage
@@ -28,6 +27,13 @@ The `-f` argument (file) takes relative or absolute paths. Use the `-s` argument
 	awkcss -s examples/zebra.awkcss < .profile  # ¹
 
 For a complete description of the AWKCSS language, see the [Reference](./reference.md).
+
+## Development
+
+> __Optional__: when using TextMate (or compatible editor), you could install [AWK syntax highlighting][awk-tmLanguage].  
+> Installing [ok-bash][] will enhance your experience while working with this repository (while making you smarter in the process).
+
+Compatiblity is intended with all `awk` variants, including the original implementation by Aho, Kernighan and Weinberger.
 
 
 ---

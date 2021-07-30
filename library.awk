@@ -75,25 +75,18 @@ function _bat_debug(dump_line		,title, key_combined, key_separate, property_valu
 		}
 	}
 }
-function _set_property_bare(nr, query, property_name, property_value) {
-	_BAT[nr, query, property_name] = property_value;
-}
-function _set_property(property_name, property_value) {
-	_set_property_bare(NR, _QUERY, property_name, property_value)
-}
-function _append_property(property_name, property_value		, the_value) {
-	if ((NR, _QUERY, property_name) in _BAT)
-		the_value = _BAT[NR, _QUERY, property_name] ";";
-	_BAT[NR, _QUERY, property_name] = the_value property_value;
-}
+# Property setters/getters
 function _has_property_bare(nr, query, property_name) {
 	return (nr, query, property_name) in _BAT;
 }
-function _has_property(property_name) {
-	return _has_property_bare(NR, _QUERY, property_name);
-}
 function _get_property_bare(nr, query, property_name) {
 	return _BAT[nr, query, property_name];
+}
+function _set_property_bare(nr, query, property_name, property_value) {
+	_BAT[nr, query, property_name] = property_value;
+}
+function _has_property(property_name) {
+	return _has_property_bare(NR, _QUERY, property_name);
 }
 function _get_property(property_name) {
 	if (_has_property_bare(NR, _QUERY, property_name))
@@ -103,12 +96,8 @@ function _get_property(property_name) {
 	if (_has_property_bare(0, "", property_name))
 		return _get_property_bare(0, "", property_name);
 }
-function _append_get_property(property_name		, result) {
-	result = (0, _QUERY, property_name) in _BAT ? _BAT[0, _QUERY, property_name] : "";
-	if ((NR, _QUERY, property_name) in _BAT) {
-		result = result (length(result) > 0 ? ";" : "") _BAT[NR, _QUERY, property_name];
-	}
-	return result;
+function _set_property(property_name, property_value) {
+	_set_property_bare(NR, _QUERY, property_name, property_value)
 }
 
 # -=[ Public functions ]=-
@@ -129,19 +118,45 @@ function select(query) {
 }
 
 # -=[ Public properties ]=-
+
+# stylize text
+function color(value) {
+	if (("color", value) in _ENUM)
+		_set_property("color", 30+_ENUM["color", value]);
+	else
+		_warning("color", value);
+}
+function background_color(value) {
+	if (("color", value) in _ENUM)
+		_set_property("background_color", 40+_ENUM["color", value]);
+	else
+		_warning("background_color", value);
+}
+	function _text_decoration_line2(value, sequence_nr) {
+		if (("text_decoration_line", value) in _ENUM)
+			_set_property("text_decoration_line-" sequence_nr, _ENUM["text_decoration_line", value]);
+		else
+			_warning("text_decoration_line", value);
+	}
+function text_decoration_line(value1, value2) {
+	_text_decoration_line2(value1, 1);
+	if (value2) _text_decoration_line2(value2, 2);
+}
+function text_decoration(value1, value2) {
+	text_decoration_line(value1, value2);
+}
+function font_weight(value) {
+	if (("font_weight", value) in _ENUM)
+		_set_property("background_color", _ENUM["font_weight", value]);
+	else
+		_warning("font_weight", value);
+}
+
 function display(value) {
 	if (("display", value) in _ENUM)
 		_set_property("display", _ENUM["display",value]);
 	else
 		_warning("display", value);
-}
-function tab_size(value) {
-	if (value == "") 
-		_set_property("tab_size", 8);
-	else if (value >= 0 && value==int(value))
-		_set_property("tab_size", int(value));
-	else
-		_warning("tab_size", value);
 }
 function width(value) {
 	if (value == "")
@@ -151,6 +166,14 @@ function width(value) {
 	else
 		_warning("width", value);
 }
+function tab_size(value) {
+	if (value == "") 
+		_set_property("tab_size", 8);
+	else if (value >= 0 && value==int(value))
+		_set_property("tab_size", int(value));
+	else
+		_warning("tab_size", value);
+}
 function white_space(value) {
 	#printf "WS[%s:%s]", NR, value
 	if (("white_space", value) in _ENUM)
@@ -158,43 +181,13 @@ function white_space(value) {
 	else
 		_warning("white_space", value);
 }
-function color(value) {
-	if (("color", value) in _ENUM)
-		_append_property("ansi_codes", 30+_ENUM["color", value])
-	else
-		_warning("color", value);
-}
-function background_color(value) {
-	if (("color", value) in _ENUM)
-		_append_property("ansi_codes", 40+_ENUM["color", value])
-	else
-		_warning("background_color", value);
-}
-function text_decoration_line2(value) {
-	if (("text_decoration_line", value) in _ENUM)
-		_append_property("ansi_codes", _ENUM["text_decoration_line", value])
-	else
-		_warning("text_decoration_line", value);
-}
-function text_decoration_line(value1, value2) {
-	text_decoration_line2(value1);
-	if (value2) text_decoration_line2(value2);
-}
-function text_decoration(value1, value2) {
-	text_decoration_line(value1, value2);
-}
-function font_weight(value) {
-	if (("font_weight", value) in _ENUM)
-		_append_property("ansi_codes", _ENUM["font_weight", value])
-	else
-		_warning("font_weight", value);
-}
 function text_overflow(value) {
 	if (("text_overflow", value) in _ENUM)
 		_set_property("text_overflow", _ENUM["text_overflow", value]);
 	else
 		_set_property("text_overflow", value); # Use supplied string as text-overflow (experimental)
 }
+
 function content(value		, display_value) {
 	_set_property("content", value);
 	if (_QUERY ~ /^::(before|after)$/) {

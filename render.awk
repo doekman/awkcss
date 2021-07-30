@@ -1,3 +1,15 @@
+function _escape_ansi_codes(ansi_codes) {
+	return length(ansi_codes)>0 ? sprintf("\033[%sm", ansi_codes) : "";
+}
+function _get_ansi_codes(nr, query		, properties, i, ansi_codes) {
+	split("color,background_color,text_decoration_line-1,text_decoration_line-2,font_weight", properties, ",");
+	for (i in properties) {
+		if (_has_property_bare(nr, query, properties[i])) {
+			ansi_codes = ansi_codes ";" _get_property_bare(nr, query, properties[i]);
+		}
+	}
+	return substr(ansi_codes, 2);
+}
 function _handle_text_overflow(text, width		, text_overflow, text_overflow_parts) {
 	if (length(text) > width) {
 		text_overflow = _get_property("text_overflow")
@@ -32,7 +44,11 @@ function _print_line(text, from_index		, width, terminal_line, pos, tab_size, ta
 	}
 	terminal_line = _handle_text_overflow(terminal_line, width);
 	# output the line
-	printf "\033[%sm%-" width "s\033[0m\n", _append_get_property("ansi_codes"), terminal_line;
+	printf _escape_ansi_codes(_get_ansi_codes(0, _QUERY));
+	printf _escape_ansi_codes(_get_ansi_codes(NR, _QUERY));
+	printf "%-" width "s", terminal_line;
+	printf _escape_ansi_codes("0");
+	printf "\n";
 	# return the number of characters of the original "text" variable where consumed
 	return width - ( (tab_size - 1) * nr_tabs_expanded)
 }

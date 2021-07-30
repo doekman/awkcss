@@ -74,6 +74,10 @@ To control the content-box (i.e. lines of text), use the following properties:
 	- __"string"__ (experimental): to specify a different character or characters, use a awk string. For example `text_overflow("8<")`.
 	- Note: because of `UTF-8`, when using a comma (`,`) or non-ASCII characters, prefix the clipping indicator with character length and a comma. For example: `text_overflow("1,❗️")`.
 
+Other properties:
+
+* `content( "any string" )`: display text for use with the `::before` and `::after` selectors. All lines are replaceble by the way.
+
 
 ## Variables
 
