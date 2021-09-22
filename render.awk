@@ -28,8 +28,7 @@ function _handle_text_overflow(text, width		, text_overflow, text_overflow_parts
 	return text;
 }
 
-function _print_line(text, from_index		, width, terminal_line, pos, tab_size, tab_width, nr_tabs_expanded, ansi_codes) {
-	width = _get_property("width");
+function _print_inline_block(text, from_index, width		, terminal_line, pos, tab_size, tab_width, nr_tabs_expanded, ansi_codes) {
 	tab_size = _get_property("tab_size");
 	terminal_line = substr(text, from_index + 1);
 	# expand tabs
@@ -48,9 +47,36 @@ function _print_line(text, from_index		, width, terminal_line, pos, tab_size, ta
 	printf _escape_ansi_codes(_get_ansi_codes(NR, _QUERY));
 	printf "%-" width "s", terminal_line;
 	printf _escape_ansi_codes("0");
-	printf "\n";
 	# return the number of characters of the original "text" variable where consumed
 	return width - ( (tab_size - 1) * nr_tabs_expanded)
+}
+function _print_margin_box(text, from_index		, current_width, margin_part, chars_consumed) {
+	current_width = _get_property("width");
+	margin_part = _get_property("margin_left");
+	if (margin_part >= current_width) {
+		_warning("margin_left", margin_part, "Ignored, because width is too small.")
+		margin_part = 0;
+	}
+	if (margin_part > 0) {
+		#printf("%d>%" margin_part "s", margin_part, " ");
+		printf("%" margin_part "s", " ");
+		current_width -= margin_part
+	}
+#	margin_part = _get_property("margin_right");
+#	if (margin_part >= current_width) {
+#		_warning("margin_right", margin_part, "Ignored, because width is too small.")
+#		margin_part = 0;
+#	}
+#	if (margin_part > 0) {
+#		current_width -= margin_part
+#	}
+	chars_consumed = _print_inline_block(text, from_index, current_width);
+#	if (margin_part > 0) {
+#		#printf("%" margin_part "s%<d", " ", margin_part);
+#		printf("%" margin_part "s", " ");
+#	}
+	printf "\n";
+	return chars_consumed;
 }
 function _handle_content(		text) {
 	if (_get_property("display") == block) {
@@ -63,12 +89,12 @@ function _handle_content(		text) {
 		if (_get_property("white_space") == pre_wrap) {
 			_index = 0;
 			while (_index == 0 || _index < length(text)) {
-				_index += _print_line(text, _index);
+				_index += _print_margin_box(text, _index);
 			}
 		}
 		else {
 			# white_space == pre, just print what fits
-			_print_line(text, 0);
+			_print_margin_box(text, 0);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 BEGIN {
-	width(6);
-	margin();
+	width(8);
+	margin(); # Will fail when setting property
+	margin(0, 1);
 }
 NR == 1 {
 	margin(1);
@@ -9,8 +10,14 @@ NR == 2 {
 	margin(1, 2);
 }
 NR == 3 {
-	margin(1, 2, 3);
+	margin(1, 3, 2);
 }
 NR == 4 {
 	margin(1, 2, 3, 4);
+}
+NR == 5 {
+	margin_left(8); # Will fail when rendering
+}
+NR == 6 {
+	# No margin provided, but rule from BEGIN will apply
 }

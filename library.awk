@@ -62,8 +62,11 @@ function _no_arg_(value) {
 	return (value=="") && (value==0)
 }
 # -=[ internal functions ]=-
-function _warning(property, value) {
-	printf "‼️ %s value '%s' is not recognized and will be ignored\n", property, value, reason > "/dev/stderr";
+function _warning(property, value, message) {
+	if (_no_arg_(message))
+		printf "‼️ %s value '%s' is not recognized and will be ignored\n", property, value > "/dev/stderr";
+	else
+		printf "‼️ %s with value '%s': %s\n", property, value, message > "/dev/stderr";
 }
 # _BAT == Big AwkCss Table
 function _bat_debug(dump_line		,title, key_combined, key_separate, property_value) {
