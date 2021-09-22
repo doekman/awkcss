@@ -55,16 +55,21 @@ So stylize text, you can use the following properties:
 
 Always be aware of the capabilities of your system. You can inspect the supported number of colors by the `COLORS` variable (see also below). Black and white always work, but for the normal colors, you need at least 8 colors. To use the bright-variations, 16 colors is the minimum.
 
-To control the content-box (i.e. lines of text), use the following properties:
+To control the box model (i.e. lines of text), use the following properties:
 
 * `display( block | none )`:
 	- __block__ (default): a paragraph (one or more lines) is created.
 	- __none__: the line is not rendered (use this instead of `next`).
-* `width( [nr_columns] )`:
+* `width( [nr_columns] )`: sets the width, including margins, of a line.
 	- __nr\_columns__: set the maximum width of a line. Handy when using background colors.
 	- _no arguments_: when omitting `nr_columns`, the default value is used, which is the width of the terminal (see variable `COLS` below).
 * `tab_size( nr_characters )`:
 	- __nr\_characters__: set the width of a tab-character. Must be a positive integer value. Defaults to `8`.
+* `margin( a [, b [, c [, d ]]] )`:
+	- ~~`margin_top( length )`: nr of lines~~ (_not implemented yet_)
+	- ~~`margin_right( length )`: nr of columns~~ (_not implemented yet_)
+	- ~~`margin_bottom( length )`: nr of lines~~ (_not implemented yet_)
+	- `margin_left( length )`: nr of columns
 * `white_space( pre | pre_wrap )`:
 	- __pre\_wrap__ (default): all whitespace is preserved, and when a line doesn't fit the _width_, it is wrapped to the next line. The content-box can be multiple lines.
 	- __pre__: same, but the text which doesn't fit the content box is not be displayed. The content-box will stay one line.

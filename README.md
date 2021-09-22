@@ -10,7 +10,6 @@ After downloading this repository, add the following to your `~/.bashrc` file¹ 
 	. awkcss.bash
 
 
-
 ## Usage
 
 The simplest use is to specify the _awkcss_ inline:
@@ -30,10 +29,12 @@ For a complete description of the AWKCSS language, see the [Reference](./referen
 
 ## Development
 
-> __Optional__: when using TextMate (or compatible editor), you could install [AWK syntax highlighting][awk-tmLanguage].  
-> Installing [ok-bash][] will enhance your experience while working with this repository (while making you smarter in the process).
-
 Compatiblity is intended with all `awk` variants, including the original implementation by Aho, Kernighan and Weinberger.
+
+**Optional:**
+
+* When using TextMate (or compatible editor), you could install [AWK syntax highlighting][awk-tmLanguage].
+* Installing [ok-bash][] will enhance your experience while working with this repository (while making you smarter in the process).
 
 
 ---
