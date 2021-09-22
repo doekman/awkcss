@@ -1,0 +1,16 @@
+BEGIN {
+	width(6);
+	margin();
+}
+NR == 1 {
+	margin(1);
+}
+NR == 2 {
+	margin(1, 2);
+}
+NR == 3 {
+	margin(1, 2, 3);
+}
+NR == 4 {
+	margin(1, 2, 3, 4);
+}

@@ -58,6 +58,9 @@ function str_mul(str, nr) {
 	gsub(" ", str, res);
 	return res;
 }
+function _no_arg_(value) {
+	return (value=="") && (value==0)
+}
 # -=[ internal functions ]=-
 function _warning(property, value) {
 	printf "‼️ %s value '%s' is not recognized and will be ignored\n", property, value, reason > "/dev/stderr";
@@ -152,11 +155,13 @@ function font_weight(value) {
 		_warning("font_weight", value);
 }
 
-function display(value) {
-	if (("display", value) in _ENUM)
-		_set_property("display", _ENUM["display",value]);
+function _set_property__length(name, value, default_value) {
+	if (value == "")
+		value = default_value
+	if (value==int(value))
+		_set_property(name, int(value));
 	else
-		_warning("display", value);
+		_warning(name, value);
 }
 function width(value) {
 	if (value == "")
@@ -173,6 +178,53 @@ function tab_size(value) {
 		_set_property("tab_size", int(value));
 	else
 		_warning("tab_size", value);
+}
+function margin_top(value) {
+	_set_property__length("margin_top", value); 
+}
+function margin_right(value) {
+	_set_property__length("margin_right", value); 
+}
+function margin_bottom(value) {
+	_set_property__length("margin_bottom", value); 
+}
+function margin_left(value) {
+	_set_property__length("margin_left", value); 
+}
+function margin(top, right, bottom, left) {
+	if (_no_arg_(top))
+		_warning("margin", ""); # margin needs at least one value
+	else if (_no_arg_(right)) {
+		margin_top(top);
+		margin_right(top);
+		margin_bottom(top);
+		margin_left(top);
+	}
+	else if (_no_arg_(bottom)) {
+		margin_top(top);
+		margin_right(right);
+		margin_bottom(top);
+		margin_left(right);
+	}
+	else if (_no_arg_(left)) {
+		margin_top(top);
+		margin_right(right);
+		margin_bottom(bottom);
+		margin_left(right);
+	}
+	else  {
+		margin_top(top);
+		margin_right(right);
+		margin_bottom(bottom);
+		margin_left(left);
+	}
+}
+
+function display(value) {
+	if (("display", value) in _ENUM)
+		_set_property("display", _ENUM["display",value]);
+	else
+		_warning("display", value);
 }
 function white_space(value) {
 	#printf "WS[%s:%s]", NR, value
