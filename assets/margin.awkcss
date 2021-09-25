@@ -1,23 +1,24 @@
 BEGIN {
-	width(8);
+	width(10);
 	margin(); # Will fail when setting property
 	margin(0, 1);
 }
 NR == 1 {
-	margin(1);
+	margin(0, 1);
 }
 NR == 2 {
-	margin(1, 2);
+	margin(0, 2);
 }
 NR == 3 {
-	margin(1, 3, 2);
+	margin(0, 3);
 }
 NR == 4 {
-	margin(1, 2, 3, 4);
+	margin(0, 4);
 }
 NR == 5 {
-	margin_left(8); # Will fail when rendering
+	margin_left(10); # Will fail when rendering, because margin > width
 }
 NR == 6 {
-	# No margin provided, but rule from BEGIN will apply
+	# No margin-left provided, but rule from BEGIN will apply
+	margin_right(9); # Will fail too when rendering (will take left margin also into account) 
 }

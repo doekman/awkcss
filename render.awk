@@ -57,24 +57,24 @@ function _print_margin_box(text, from_index		, current_width, margin_part, chars
 		_warning("margin_left", margin_part, "Ignored, because width is too small.")
 		margin_part = 0;
 	}
-	if (margin_part > 0) {
+	else if (margin_part > 0) {
 		#printf("%d>%" margin_part "s", margin_part, " ");
 		printf("%" margin_part "s", " ");
 		current_width -= margin_part
 	}
-#	margin_part = _get_property("margin_right");
-#	if (margin_part >= current_width) {
-#		_warning("margin_right", margin_part, "Ignored, because width is too small.")
-#		margin_part = 0;
-#	}
-#	if (margin_part > 0) {
-#		current_width -= margin_part
-#	}
+	margin_part = _get_property("margin_right");
+	if (margin_part >= current_width) {
+		_warning("margin_right", margin_part, "Ignored, because width is too small.")
+		margin_part = 0;
+	}
+	else if (margin_part > 0) {
+		current_width -= margin_part
+	}
 	chars_consumed = _print_inline_block(text, from_index, current_width);
-#	if (margin_part > 0) {
-#		#printf("%" margin_part "s%<d", " ", margin_part);
-#		printf("%" margin_part "s", " ");
-#	}
+	if (margin_part > 0) {
+		#printf("%" margin_part "s%<d", " ", margin_part);
+		printf("%" margin_part "s", " ");
+	}
 	printf "\n";
 	return chars_consumed;
 }
