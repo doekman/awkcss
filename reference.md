@@ -66,9 +66,9 @@ To control the box model (i.e. lines of text), use the following properties:
 * `tab_size( nr_characters )`:
 	- __nr\_characters__: set the width of a tab-character. Must be a positive integer value. Defaults to `8`.
 * `margin( a [, b [, c [, d ]]] )`:
-	- ~~`margin_top( length )`: nr of lines~~ (_not implemented yet_)
+	- `margin_top( length )`: nr of lines
 	- `margin_right( length )`: nr of columns
-	- ~~`margin_bottom( length )`: nr of lines~~ (_not implemented yet_)
+	- `margin_bottom( length )`: nr of lines
 	- `margin_left( length )`: nr of columns
 * `white_space( pre | pre_wrap )`:
 	- __pre\_wrap__ (default): all whitespace is preserved, and when a line doesn't fit the _width_, it is wrapped to the next line. The content-box can be multiple lines.

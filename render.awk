@@ -50,7 +50,7 @@ function _print_inline_block(text, from_index, width		, terminal_line, pos, tab_
 	# return the number of characters of the original "text" variable where consumed
 	return width - ( (tab_size - 1) * nr_tabs_expanded)
 }
-function _print_margin_box(text, from_index		, current_width, margin_part, chars_consumed) {
+function _print_margin_line(text, from_index		, current_width, margin_part, chars_consumed) {
 	current_width = _get_property("width");
 	margin_part = _get_property("margin_left");
 	if (margin_part >= current_width) {
@@ -78,7 +78,14 @@ function _print_margin_box(text, from_index		, current_width, margin_part, chars
 	printf "\n";
 	return chars_consumed;
 }
-function _handle_content(		text) {
+function _print_margin(margin_property_name		, value) {
+	value = _get_property(margin_property_name);
+	while (value > 0) {
+		_print_margin_line("", 0);
+		value -= 1;
+	}
+}
+function _print_margin_box(		text) {
 	if (_get_property("display") == block) {
 		if (_has_property("content")) {
 			text = _get_property("content");
@@ -86,16 +93,18 @@ function _handle_content(		text) {
 		else {
 			text = $0;
 		}
+		_print_margin("margin_top")
 		if (_get_property("white_space") == pre_wrap) {
 			_index = 0;
 			while (_index == 0 || _index < length(text)) {
-				_index += _print_margin_box(text, _index);
+				_index += _print_margin_line(text, _index);
 			}
 		}
 		else {
 			# white_space == pre, just print what fits
-			_print_margin_box(text, 0);
+			_print_margin_line(text, 0);
 		}
+		_print_margin("margin_bottom")
 	}
 }
 # Main render rule
@@ -103,13 +112,13 @@ function _handle_content(		text) {
 	select();
 	if (_get_property("::before") == "block") {
 		select("::before");
-		_handle_content();
+		_print_margin_box();
 		select();
 	}
-	_handle_content(); # handle main line
+	_print_margin_box(); # handle main line
 	if (_get_property("::after") == "block") {
 		select("::after");
-		_handle_content();
+		_print_margin_box();
 		select();
 	}
 }

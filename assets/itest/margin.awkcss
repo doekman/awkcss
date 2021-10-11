@@ -7,13 +7,13 @@ NR == 1 {
 	margin(0, 1);
 }
 NR == 2 {
-	margin(0, 2);
+	margin(1, 2);
 }
 NR == 3 {
 	margin(0, 3);
 }
 NR == 4 {
-	margin(0, 4);
+	margin(2, 4, 1, 4);
 }
 NR == 5 {
 	margin_left(10); # Will fail when rendering, because margin > width
