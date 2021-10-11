@@ -80,6 +80,9 @@ function _print_margin_line(text, from_index		, current_width, margin_part, char
 }
 function _print_margin(margin_property_name		, value) {
 	value = _get_property(margin_property_name);
+	if (margin_property_name == "margin_top") {
+		# check for margin collapse
+	}
 	while (value > 0) {
 		_print_margin_line("", 0);
 		value -= 1;
@@ -93,7 +96,7 @@ function _print_margin_box(		text) {
 		else {
 			text = $0;
 		}
-		_print_margin("margin_top")
+		_print_margin("margin_top");
 		if (_get_property("white_space") == pre_wrap) {
 			_index = 0;
 			while (_index == 0 || _index < length(text)) {
@@ -104,7 +107,7 @@ function _print_margin_box(		text) {
 			# white_space == pre, just print what fits
 			_print_margin_line(text, 0);
 		}
-		_print_margin("margin_bottom")
+		_print_margin("margin_bottom");
 	}
 }
 # Main render rule
