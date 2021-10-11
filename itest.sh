@@ -127,14 +127,14 @@ function run_all_tests {
 }
 
 function create_test {
-    mkdir -p "assets/$(dirname "$1")"
+    mkdir -p "$assets/$(dirname "$1")"
     for part in awkcss input expected; do
-        touch "assets/$1.$part"
+        touch "$assets/$1.$part"
     done
 }
 
 # Setup
-assets="assets"
+assets="assets/itest"
 cd "$(dirname "$0")"
 # shellcheck disable=SC1091
 . awkcss.bash
