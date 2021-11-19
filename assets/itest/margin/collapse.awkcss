@@ -1,0 +1,7 @@
+BEGIN {
+	width(10);
+	margin(1, 0);
+}
+/^#/ {
+	margin(2, 0);
+}

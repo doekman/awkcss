@@ -37,6 +37,7 @@ BEGIN {
 	
 	# Initialize
 	select();
+	_STATE["last_vertical_margin"] = 0; # for use with margin collapse
 }
 
 # section is gemodelleerd naar console.group()

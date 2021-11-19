@@ -65,7 +65,7 @@ To control the box model (i.e. lines of text), use the following properties:
 	- _no arguments_: when omitting `nr_columns`, the default value is used, which is the width of the terminal (see variable `COLS` below).
 * `tab_size( nr_characters )`:
 	- __nr\_characters__: set the width of a tab-character. Must be a positive integer value. Defaults to `8`.
-* `margin( a [, b [, c [, d ]]] )`:
+* `margin( a [, b [, c [, d ]]] )`: Margin collapse for top/bottom margins is supported.
 	- `margin_top( length )`: nr of lines
 	- `margin_right( length )`: nr of columns
 	- `margin_bottom( length )`: nr of lines

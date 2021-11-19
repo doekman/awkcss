@@ -78,10 +78,13 @@ function _print_margin_line(text, from_index		, current_width, margin_part, char
 	printf "\n";
 	return chars_consumed;
 }
-function _print_margin(margin_property_name		, value) {
+function _print_vertical_margin(margin_property_name		, value) {
 	value = _get_property(margin_property_name);
-	if (margin_property_name == "margin_top") {
-		# check for margin collapse
+	if (margin_property_name == "margin_bottom") {
+		_STATE["last_vertical_margin"] = value;
+	}
+	else { #if (margin_property_name == "margin_top")
+		value = value - _STATE["last_vertical_margin"]
 	}
 	while (value > 0) {
 		_print_margin_line("", 0);
@@ -96,7 +99,7 @@ function _print_margin_box(		text) {
 		else {
 			text = $0;
 		}
-		_print_margin("margin_top");
+		_print_vertical_margin("margin_top");
 		if (_get_property("white_space") == pre_wrap) {
 			_index = 0;
 			while (_index == 0 || _index < length(text)) {
@@ -107,7 +110,7 @@ function _print_margin_box(		text) {
 			# white_space == pre, just print what fits
 			_print_margin_line(text, 0);
 		}
-		_print_margin("margin_bottom");
+		_print_vertical_margin("margin_bottom");
 	}
 }
 # Main render rule
