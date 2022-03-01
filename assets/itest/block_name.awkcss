@@ -1,0 +1,10 @@
+BEGIN {
+	width(30);
+}
+/^#/ {
+	block_name();
+}
+/^>/ {
+	block_name("quote");
+	margin(1, 0);
+}

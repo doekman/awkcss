@@ -79,19 +79,24 @@ function _print_margin_line(text, from_index		, current_width, margin_part, char
 	return chars_consumed;
 }
 function _print_vertical_margin(margin_property_name		, value) {
-	value = _get_property(margin_property_name);
 	if (margin_property_name == "margin_bottom") {
-		_STATE["last_vertical_margin"] = value;
+		value = _STATE["last_vertical_margin"];
+		NR -= 1; # margin_bottom belongs to previous line
 	}
 	else { #if (margin_property_name == "margin_top")
+		value = _get_property(margin_property_name);
 		value = value - _STATE["last_vertical_margin"]
+		_STATE["last_vertical_margin"] = _get_property("margin_bottom");
 	}
 	while (value > 0) {
 		_print_margin_line("", 0);
 		value -= 1;
 	}
+	if (margin_property_name == "margin_bottom") {
+		NR += 1; # restore
+	}
 }
-function _print_margin_box(		text) {
+function _print_margin_box(		text, last_block_name, current_block_name) {
 	if (_get_property("display") == block) {
 		if (_has_property("content")) {
 			text = _get_property("content");
@@ -99,18 +104,27 @@ function _print_margin_box(		text) {
 		else {
 			text = $0;
 		}
-		_print_vertical_margin("margin_top");
+		last_block_name = _STATE["last_block_name"];
+		current_block_name = _get_current_block_name();
+		# We only know whether to print a bottom_margin, when the next line DOESN'T belong
+		# to the next block, so we need to buffer this.
+		if (NR > 1 && last_block_name != current_block_name) {
+			_print_vertical_margin("margin_bottom");
+		}
+
+		if (last_block_name != current_block_name) {
+			_print_vertical_margin("margin_top");
+		}
 		if (_get_property("white_space") == pre_wrap) {
 			_index = 0;
 			while (_index == 0 || _index < length(text)) {
 				_index += _print_margin_line(text, _index);
 			}
 		}
-		else {
-			# white_space == pre, just print what fits
+		else { # white_space == pre, just print what fits
 			_print_margin_line(text, 0);
 		}
-		_print_vertical_margin("margin_bottom");
+		_STATE["last_block_name"] = current_block_name;
 	}
 }
 # Main render rule
@@ -130,6 +144,8 @@ function _print_margin_box(		text) {
 }
 
 END {
+	# We need to close the last box
+	_print_vertical_margin("margin_bottom");
 	if (_DUMP != "") {
 		_bat_debug(_DUMP);
 	}

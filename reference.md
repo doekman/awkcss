@@ -13,6 +13,7 @@ You can use any awk-condition to select a line:
 
 	# Will select all lines with three or more consecutive 'e'-characters
 	/e{3,}/ { color(red); }
+	
 	# Will select every odd line
 	NR % 2 == 1 { color(green); }
 
@@ -60,6 +61,10 @@ To control the box model (i.e. lines of text), use the following properties:
 * `display( block | none )`:
 	- __block__ (default): a paragraph (one or more lines) is created.
 	- __none__: the line is not rendered (use this instead of `next`).
+* `block_name( "name" )`:
+	- For setting up _block continuation_.
+	- Normally, every input line results in a block-item in the box-model. To combine adjecent input lines into one block-item, give these lines the same name.
+	- When not set, the block-name is regarded the same as the `NR` variable.
 * `width( [nr_columns] )`: sets the width, including margins, of a line.
 	- __nr\_columns__: set the maximum width of a line. Handy when using background colors.
 	- _no arguments_: when omitting `nr_columns`, the default value is used, which is the width of the terminal (see variable `COLS` below).

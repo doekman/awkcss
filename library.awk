@@ -37,7 +37,8 @@ BEGIN {
 	
 	# Initialize
 	select();
-	_STATE["last_vertical_margin"] = 0; # for use with margin collapse
+	_STATE["last_vertical_margin"] = 0;  # for use with margin collapse, and block continuation
+	_STATE["last_block_name"] = "";     # determine if a line is a block continuation
 }
 
 # section is gemodelleerd naar console.group()
@@ -125,6 +126,18 @@ function select(query) {
 }
 
 # -=[ Public properties ]=-
+
+function block_name(value) {
+	if (value)
+		_set_property("block_name", value);
+	else
+		_warning("block_name", value, "You need to supply a value");
+}
+function _get_current_block_name() {
+	if (_has_property_bare(NR, _QUERY, "block_name"))
+		return _get_property_bare(NR, _QUERY, "block_name");
+	return "" NR; # when no name specified, use line number as name
+}
 
 # stylize text
 function color(value) {
