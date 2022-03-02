@@ -10,7 +10,7 @@ all: awkcss -f examples/all.awkcss examples/all.txt
 cd; awkcss -s examples/zebra.awkcss < ${1:-.profile}  #or .bashrc; `cd -` to go back
 # tests
 cd fiddle
-test: ./itest.sh "$@" # Run all tests
-./itest.sh help # Show usage
-./itest.sh run defaults.awkcss # Generate test-case error
-./itest.sh run does-not-exist.awkcss # Generate another test-case error
+test: ./test.sh "$@" # Run all tests
+./test.sh help # Show usage
+./test.sh run defaults.awkcss # Generate test-case error
+./test.sh run does-not-exist.awkcss # Generate another test-case error
