@@ -1,0 +1,7 @@
+BEGIN {
+	width(20);
+}
+/^>/ {
+	border("ascii");
+	#border_style_left("unset");
+}

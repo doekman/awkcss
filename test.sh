@@ -134,7 +134,7 @@ function create_test {
 }
 
 # Setup
-assets="assets/tests"
+assets="assets"
 cd "$(dirname "$0")"
 # shellcheck disable=SC1091
 . awkcss.bash
