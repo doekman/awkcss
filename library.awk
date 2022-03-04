@@ -18,6 +18,8 @@ BEGIN {
 	_ENUM["color", bright_magenta="bright_magenta"] = 65;
 	_ENUM["color",    bright_cyan="bright_cyan"   ] = 66;
 	_ENUM["color",   bright_white="bright_white"  ] = 67; # bright_white
+	# border_style
+	_ENUM["border_style",         ascii="ascii"]    = 1;
 	# display
 	_ENUM["display", block="block"] = block;
 	_ENUM["display",  none="none" ] = none;
@@ -234,6 +236,47 @@ function margin(top, right, bottom, left) {
 		margin_right(right);
 		margin_bottom(bottom);
 		margin_left(left);
+	}
+}
+function border_style_top(style) {
+	if (style==unset || ("border_style", style) in _ENUM)
+		_set_property("border_style_top", style);
+	else
+		_warning("border_style_top", style);
+}
+function border_style_right(style) {
+	if (style==unset || ("border_style", style) in _ENUM)
+		_set_property("border_style_right", style);
+	else
+		_warning("border_style_right", style);
+}
+function border_style_bottom(style) {
+	if (style==unset || ("border_style", style) in _ENUM)
+		_set_property("border_style_bottom", style);
+	else
+		_warning("border_style_bottom", style);
+}
+function border_style_left(style) {
+	if (style==unset || ("border_style", style) in _ENUM)
+		_set_property("border_style_left", style);
+	else
+		_warning("border_style_left", style);
+}
+function border_style(style) {
+	if (style==unset || ("border_style", style) in _ENUM) {
+		border_style_top(style);
+		border_style_right(style);
+		border_style_bottom(style);
+		border_style_left(style);
+	}
+	else
+		_warning("border_style", value);
+}
+function border(style) {
+	if (_no_arg_(style))
+		_warning("border", ""); # border needs at least one value
+	else {
+		border_style(style);
 	}
 }
 

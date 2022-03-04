@@ -75,6 +75,12 @@ To control the box model (i.e. lines of text), use the following properties:
 	- `margin_right( length )`: nr of columns
 	- `margin_bottom( length )`: nr of lines
 	- `margin_left( length )`: nr of columns
+* `border( named_style )`: for border styles, see `named_style` below. <mark>Rendering not implemented yet</mark>
+	- `border_style( named_style )`
+		+ `border_style_top( named_style )`
+		+ `border_style_right( named_style )`
+		+ `border_style_bottom( named_style )`
+		+ `border_style_left( named_style )`
 * `white_space( pre | pre_wrap )`:
 	- __pre\_wrap__ (default): all whitespace is preserved, and when a line doesn't fit the _width_, it is wrapped to the next line. The content-box can be multiple lines.
 	- __pre__: same, but the text which doesn't fit the content box is not be displayed. The content-box will stay one line.
@@ -83,6 +89,10 @@ To control the box model (i.e. lines of text), use the following properties:
 	- __ellipsis__: display an ellipsis (`…`) to indicate the text is partly shown and is clipped.
 	- __"string"__ (experimental): to specify a different character or characters, use a awk string. For example `text_overflow("8<")`.
 	- Note: because of `UTF-8`, when using a comma (`,`) or non-ASCII characters, prefix the clipping indicator with character length and a comma. For example: `text_overflow("1,❗️")`.
+
+`named_style` is used for border styles, and is defined one of:
+
+* `ascii` for simple borders (left/right: `|`, top/bottom: `-`, corners: `+`)
 
 Other properties:
 
