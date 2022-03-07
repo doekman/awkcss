@@ -17,7 +17,7 @@ You can use any awk-condition to select a line:
 	# Will select every odd line
 	NR % 2 == 1 { color(green); }
 
-To apply a setting to every line, you can either omit the awk-condition, or use the `BEGIN` template. The latter works a bit different, since it only introduces one entry in the CSS DOM. So this is the prefered approach:
+To apply a setting to every line, you can either omit the awk-condition, or use the `BEGIN` template. The latter works a bit different, since it only introduces one entry in the CSS DOM. So this is the preferred approach:
 
 	BEGIN { background(gray); }
 
@@ -43,19 +43,6 @@ So stylize text, you can use the following properties:
 	- `text_decoration_line( underline | blink [, ... ] )`: make the text _underline_ and/or _blink_.
 * `font_weight( normal | bold )`: make the text appear _bold_ or _normal_.
 
-`named_color` is defined one of:
-
-* `black` and `bright_black` (or `gray`)
-* `red` and `bright_red`
-* `green` and `bright_green`
-* `yellow` and `bright_yellow`
-* `blue` and `bright_blue`
-* `magenta` and `bright_magenta`
-* `cyan` and `bright_cyan`
-* `white` and `bright_white`
-
-Always be aware of the capabilities of your system. You can inspect the supported number of colors by the `COLORS` variable (see also below). Black and white always work, but for the normal colors, you need at least 8 colors. To use the bright-variations, 16 colors is the minimum.
-
 To control the box model (i.e. lines of text), use the following properties:
 
 * `display( block | none )`:
@@ -63,7 +50,7 @@ To control the box model (i.e. lines of text), use the following properties:
 	- __none__: the line is not rendered (use this instead of `next`).
 * `block_name( "name" )`:
 	- For setting up _block continuation_.
-	- Normally, every input line results in a block-item in the box-model. To combine adjecent input lines into one block-item, give these lines the same name.
+	- Normally, every input line results in a block-item in the box-model. To combine adjacent input lines into one block-item, give these lines the same name.
 	- When not set, the block-name is regarded the same as the `NR` variable.
 * `width( [nr_columns] )`: sets the width, including margins, of a line.
 	- __nr\_columns__: set the maximum width of a line. Handy when using background colors.
@@ -71,11 +58,11 @@ To control the box model (i.e. lines of text), use the following properties:
 * `tab_size( nr_characters )`:
 	- __nr\_characters__: set the width of a tab-character. Must be a positive integer value. Defaults to `8`.
 * `margin( a [, b [, c [, d ]]] )`: Margin collapse for top/bottom margins is supported.
-	- `margin_top( length )`: nr of lines
-	- `margin_right( length )`: nr of columns
-	- `margin_bottom( length )`: nr of lines
-	- `margin_left( length )`: nr of columns
-* `border( named_style )`: for border styles, see `named_style` below. <mark>Rendering not implemented yet</mark>
+	- `margin_top( length )`: number of lines
+	- `margin_right( length )`: number of columns
+	- `margin_bottom( length )`: number of lines
+	- `margin_left( length )`: number of columns
+* `border( named_style )`: for border styles, see `named_style` below.
 	- `border_style( named_style )`
 		+ `border_style_top( named_style )`
 		+ `border_style_right( named_style )`
@@ -90,13 +77,31 @@ To control the box model (i.e. lines of text), use the following properties:
 	- __"string"__ (experimental): to specify a different character or characters, use a awk string. For example `text_overflow("8<")`.
 	- Note: because of `UTF-8`, when using a comma (`,`) or non-ASCII characters, prefix the clipping indicator with character length and a comma. For example: `text_overflow("1,❗️")`.
 
-`named_style` is used for border styles, and is defined one of:
-
-* `ascii` for simple borders (left/right: `|`, top/bottom: `-`, corners: `+`)
-
 Other properties:
 
-* `content( "any string" )`: display text for use with the `::before` and `::after` selectors. All lines are replaceble by the way.
+* `content( "any string" )`: display text for use with the `::before` and `::after` selectors. All lines are replaceable by the way.
+
+
+## Enumerations
+
+`named_color` is defined one of:
+
+* `black` and `bright_black` (or `gray`)
+* `red` and `bright_red`
+* `green` and `bright_green`
+* `yellow` and `bright_yellow`
+* `blue` and `bright_blue`
+* `magenta` and `bright_magenta`
+* `cyan` and `bright_cyan`
+* `white` and `bright_white`
+
+Always be aware of the capabilities of your system. You can inspect the supported number of colors by the `COLORS` variable (see also below). Black and white always work, but for the normal colors, you need at least 8 colors. To use the bright-variations, 16 colors is the minimum.
+
+`named_style` is used for border styles, and is defined one of:
+
+* `none` to unset borders
+* `ascii` for simple borders (left/right: `|`, top/bottom: `-`, corners: `+`)
+* `ascii_rounded` same (left/right: `|`, top: `-`, bottom: `_`, corners: `/` and `\`)
 
 
 ## Variables

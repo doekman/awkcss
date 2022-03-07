@@ -3,5 +3,5 @@ BEGIN {
 }
 /^>/ {
 	border("ascii");
-	#border_style_left("unset");
+	border_style_left("none");
 }

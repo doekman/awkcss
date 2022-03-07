@@ -18,8 +18,11 @@ BEGIN {
 	_ENUM["color", bright_magenta="bright_magenta"] = 65;
 	_ENUM["color",    bright_cyan="bright_cyan"   ] = 66;
 	_ENUM["color",   bright_white="bright_white"  ] = 67; # bright_white
-	# border_style
-	_ENUM["border_style",         ascii="ascii"]    = 1;
+	# border_style (value is comma-splittable array, first value is encoding-type)
+	# 1: telephone number pad, 1..9 (5 is empty) defines edge characters
+	_ENUM["border_style",          none="none"]           = "0";
+	_ENUM["border_style",         ascii="ascii"]          = "1,+,-,+,|,,|,+,-,+";
+	_ENUM["border_style",   ascii_round="ascii_rounded"]  = "1,/,-,\\,|,,|,\\,_,/";
 	# display
 	_ENUM["display", block="block"] = block;
 	_ENUM["display",  none="none" ] = none;
@@ -41,6 +44,7 @@ BEGIN {
 	select();
 	_STATE["last_vertical_margin"] = 0;  # for use with margin collapse, and block continuation
 	_STATE["last_block_name"] = "";     # determine if a line is a block continuation
+	_STATE["border_row"] = 0; # 0 undefined, 1 border-top, 2 inside border, 3 border-bottom
 }
 
 # section is gemodelleerd naar console.group()
@@ -110,6 +114,15 @@ function _set_property(property_name, property_value) {
 	_set_property_bare(NR, _QUERY, property_name, property_value)
 }
 
+function get_border_glyph(style, part		, items, glyph_index) {
+	split(_ENUM["border_style", style], items, ",");
+	if (items[0] == "0" || _STATE["border_row"] == 0) {
+		return "";
+	}
+	glyph_index = (_STATE["border_row"] - 1) * 3 + (part + 1);
+	#printf("(%s,%s,%s,%s,%s)", style, _STATE["border_row"], part, glyph_index, items[glyph_index])
+	return items[glyph_index];
+}
 # -=[ Public functions ]=-
 function select(query) {
 	if (query) {

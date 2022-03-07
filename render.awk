@@ -50,30 +50,56 @@ function _print_inline_block(text, from_index, width		, terminal_line, pos, tab_
 	# return the number of characters of the original "text" variable where consumed
 	return width - ( (tab_size - 1) * nr_tabs_expanded)
 }
-function _print_margin_line(text, from_index		, current_width, margin_part, chars_consumed) {
+function _print_border_line(text, from_index, current_width		, border_part, border_glyph, chars_consumed) {
+	border_part = _get_property("border_style_left");
+	if (border_part) {
+		if (current_width <= 2) {
+			_warning("border_style_left", border_part, "Ignored, because width is too small.")
+		}
+		else {
+			border_glyph = get_border_glyph(border_part, 1);
+			printf("%s", border_glyph);
+			current_width -= length(border_glyph);
+		}
+	}
+	border_part = _get_property("border_style_right");
+	if (border_part) {
+		if (current_width <= 2) {
+			_warning("border_style_right", border_part, "Ignored, because width is too small.")
+		}
+		else {
+			border_glyph = get_border_glyph(border_part, 3);
+			current_width -= length(border_glyph);
+		}
+	}
+	chars_consumed = _print_inline_block(text, from_index, current_width)
+	if (border_part) {
+		printf("%s", border_glyph);
+	}
+	return chars_consumed;
+}
+function _print_margin_line(text, from_index		, current_width, left_margin, right_margin, chars_consumed) {
 	current_width = _get_property("width");
-	margin_part = _get_property("margin_left");
-	if (margin_part >= current_width) {
-		_warning("margin_left", margin_part, "Ignored, because width is too small.")
-		margin_part = 0;
+	left_margin = _get_property("margin_left");
+	if (left_margin >= current_width) {
+		_warning("margin_left", left_margin, "Ignored, because width is too small.")
+		left_margin = 0;
 	}
-	else if (margin_part > 0) {
-		#printf("%d>%" margin_part "s", margin_part, " ");
-		printf("%" margin_part "s", " ");
-		current_width -= margin_part
+	else if (left_margin > 0) {
+		printf("%" left_margin "s", " ");
+		current_width -= left_margin
 	}
-	margin_part = _get_property("margin_right");
-	if (margin_part >= current_width) {
-		_warning("margin_right", margin_part, "Ignored, because width is too small.")
-		margin_part = 0;
+	right_margin = _get_property("margin_right");
+	if (right_margin >= current_width) {
+		_warning("margin_right", right_margin, "Ignored, because width is too small.")
+		right_margin = 0;
 	}
-	else if (margin_part > 0) {
-		current_width -= margin_part
+	else if (right_margin > 0) {
+		current_width -= right_margin
 	}
-	chars_consumed = _print_inline_block(text, from_index, current_width);
-	if (margin_part > 0) {
-		#printf("%" margin_part "s%<d", " ", margin_part);
-		printf("%" margin_part "s", " ");
+	chars_consumed = _print_border_line(text, from_index, current_width)
+	if (right_margin > 0) {
+		printf("%" right_margin "s", " ");
 	}
 	printf "\n";
 	return chars_consumed;
@@ -96,6 +122,37 @@ function _print_vertical_margin(margin_property_name		, value) {
 		NR += 1; # restore
 	}
 }
+function _print_vertical_border(border_side		, border_style, border_width, border_glyph, border_corner_width) {
+	if (border_side == "bottom") {
+		NR -= 1;
+	}
+	border_width = _get_property("width") - _get_property("margin_left") - _get_property("margin_right");
+	if (border_side == "bottom") {
+		border_style = _get_property("border_style_bottom");
+		_STATE["border_row"] = 3;
+		border_glyph = get_border_glyph(border_style, 2);
+		if (border_glyph) {
+			border_corner_width = length(get_border_glyph(_get_property("border_style_left"), 1) get_border_glyph(_get_property("border_style_right"), 3))
+			_print_margin_line(str_mul(border_glyph, border_width - border_corner_width), 0);
+		}
+	}
+	else { # border_side == "top"
+		border_style = _get_property("border_style_top");
+		_STATE["border_row"] = 1;
+		border_glyph = get_border_glyph(border_style, 2);
+		if (border_glyph) {
+			border_corner_width = length(get_border_glyph(_get_property("border_style_left"), 1) get_border_glyph(_get_property("border_style_right"), 3))
+			_print_margin_line(str_mul(border_glyph, border_width - border_corner_width), 0);
+		}
+	}
+	if (border_side == "bottom") {
+		NR += 1;
+	}
+}
+function _close_box() {
+	_print_vertical_border("bottom");
+	_print_vertical_margin("margin_bottom");
+}
 function _print_margin_box(		text, last_block_name, current_block_name) {
 	if (_get_property("display") == block) {
 		if (_has_property("content")) {
@@ -109,12 +166,14 @@ function _print_margin_box(		text, last_block_name, current_block_name) {
 		# We only know whether to print a bottom_margin, when the next line DOESN'T belong
 		# to the next block, so we need to buffer this.
 		if (NR > 1 && last_block_name != current_block_name) {
-			_print_vertical_margin("margin_bottom");
+			_close_box();
 		}
 
 		if (last_block_name != current_block_name) {
 			_print_vertical_margin("margin_top");
+			_print_vertical_border("top");
 		}
+		_STATE["border_row"] = 2;
 		if (_get_property("white_space") == pre_wrap) {
 			_index = 0;
 			while (_index == 0 || _index < length(text)) {
@@ -145,7 +204,9 @@ function _print_margin_box(		text, last_block_name, current_block_name) {
 
 END {
 	# We need to close the last box
-	_print_vertical_margin("margin_bottom");
+	NR += 1;
+	_close_box();
+	NR -= 1;
 	if (_DUMP != "") {
 		_bat_debug(_DUMP);
 	}
