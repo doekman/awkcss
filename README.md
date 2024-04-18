@@ -9,6 +9,10 @@ After downloading this repository, add the following to your `~/.bashrc` file¹ 
 
 	. awkcss.bash
 
+> Don't look at me
+> This is a quote
+> I need it, for multiple lines
+
 
 ## Usage
 
@@ -27,6 +31,7 @@ The `-f` argument (file) takes relative or absolute paths. Use the `-s` argument
 
 For a complete description of the AWKCSS language, see the [Reference](./reference.md).
 
+
 ## Development
 
 Compatiblity is intended with all `awk` variants, including the original implementation by Aho, Kernighan and Weinberger.
@@ -37,7 +42,7 @@ Compatiblity is intended with all `awk` variants, including the original impleme
 * Installing [ok-bash][] will enhance your experience while working with this repository (while making you smarter in the process).
 
 
----
+- - - - - - - - - - - - - - - - - - - - 
 
 ¹) or your other favourite startup file.
 

@@ -1,5 +1,5 @@
 BEGIN {
-	width(84); # Maximum line length 120 positions
+	width(72); # Maximum line length 120 positions
 	margin(0, 2);
 }
 /^#+ / {			#headings
@@ -18,4 +18,14 @@ BEGIN {
 	color("gray");
 	white_space("pre");
 	text_overflow("ellipsis");
+}
+/^>/ {				#quotes
+	block_name("quote");
+	border(ascii);
+	border_style_left(none);
+}
+/^ {0,2}( ?[*] ?){3,}/ || 
+/^ {0,2}( ?[-] ?){3,}/ ||
+/^ {0,2}( ?[_] ?){3,}/ {		#Horizontal rules
+	text_decoration(blink);
 }

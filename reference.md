@@ -150,4 +150,7 @@ Check out the `examples/` folder with some idea's how to use `awkcss`.
 * `awkcss` is designed to work with all versions of `awk`, so `gawk` specific capabilities are not used.
 
 
-  [DSL]: https://en.wikipedia.org/wiki/Domain-specific_language "Domain-specific language"
+
+[DSL]: https://en.wikipedia.org/wiki/Domain-specific_language "Domain-specific language"
+[console]: https://developer.mozilla.org/en-US/docs/Tools/Browser_Console
+

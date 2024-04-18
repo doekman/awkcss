@@ -1,8 +1,8 @@
 install: . awkcss.bash # or reload
 # Examples
 awkcss "$@" 'NR % 2 == 1 { color(red); } NR % 2 == 0 { color(green); }' < examples/markdown.awkcss
-md: head -n 35 README.md | awkcss -f examples/markdown.awkcss "$@"
-zebra: awkcss "$@" -s examples/zebra.awkcss ~/.profile ~/.psqlrc 
+md: head -n ${1:-35} README.md | awkcss -f examples/markdown.awkcss "${@:2}"
+zebra: awkcss "$@" -s examples/zebra.awkcss ~/.profile ~/.bashrc 
 awkcss -f examples/color-interleaving.awkcss "$@" examples/markdown.awkcss
 awkcss -F ':' -s examples/passwd.awkcss "$@" /etc/passwd
 all: awkcss -f examples/all.awkcss examples/all.txt
